@@ -94,7 +94,7 @@ MFCC介绍在语音识别（Speech Recognition）和话者识别（Speaker Recog
 MFCC介绍在语音识别（Speech Recognition）和话者识别（Speaker Recognition）方面，最常用到的语音特征就是梅尔倒谱系数（Mel-scale Frequency Cepstral Coefficients，简称MFCC）。">
 <meta property="og:image" content="http://firechecking.github.io/2017/02/14/MFCC学习/MFCC参数提取基本流程.jpg">
 <meta property="og:image" content="http://firechecking.github.io/2017/02/14/MFCC学习/Mel频率滤波器组.jpg">
-<meta property="og:updated_time" content="2017-02-14T11:21:36.000Z">
+<meta property="og:updated_time" content="2017-02-14T11:32:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MFCC学习">
 <meta name="twitter:description" content="参考文档https://my.oschina.net/jamesju/blog/193343
@@ -438,12 +438,15 @@ MFCC介绍在语音识别（Speech Recognition）和话者识别（Speaker Recog
 </li>
 <li><p>动态差分参数的提取（包括一阶差分和二阶差分）</p>
 <p> 标准的倒谱参数MFCC只反映了语音参数的静态特性，语音的动态特性可以用这些静态特征的差分谱来描述。实验证明：把动、静态特征结合起来才能有效提高系统的识别性能。差分参数的计算可以采用下面的公式：</p>
-<p> $$d_t =<br> \begin{cases}<br>C_{t+1}-C_t &amp; \text{ , } t&lt;K \\<br>\frac {\sum_{k=1}^K k(C_{t+k}-C_{t-k})}{\sqrt{2\sum_{k=1}^K k^2}} &amp; \text{ , } others \\<br>C_t-C_{t-1} &amp; \text{ , } t \geq Q-K<br>\end{cases}<br> $$</p>
+<p> $$d_t =<br> \begin{cases}<br> C_{t+1}-C_t &amp; \text{ , } t&lt;K \\<br> \frac {\sum_{k=1}^K\ k(C _{t+k}\ -C_{t-k}\ \ )}    {\sqrt{2\sum_{k=1}^K\ k^2}} &amp; \text{ , } others \\<br> C_t-C_{t-1} &amp; \text{ , } t \geq Q-K<br> \end{cases}<br> $$</p>
 <p> 式中,$d_t$表示第t个一阶差分，$C_t$表示第t个倒谱系数，Q表示倒谱系数的阶数，K表示一阶导数的时间差，可取1或2。将上式的结果再代入就可以得到二阶差分的参数。</p>
 </li>
 </ol>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>因此，MFCC的全部组成其实是：</p>
-<p>N维MFCC参数（N/3 MFCC系数+ N/3 一阶差分参数+ N/3 二阶差分参数）+帧能量（此项可根据需求替换）</p>
+<p>$$N维MFCC参数+帧能量$$</p>
+<p>其中$N维MFCC参数$包括</p>
+<p>$$N/3维MFCC系数+ N/3维一阶差分参数+ N/3维二阶差分参数$$</p>
+<p>$帧能量$可根据需求替换</p>
 
       
     </div>
