@@ -1,0 +1,885 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习,语音识别,语言模型," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="参考文章
+http://blog.csdn.net/zhoubl668/article/details/8365716
+
+SRILM简介SRILM主要用来构建和应用统计语言模型，主要用于语音识别，统计标注和切分，以及机器翻译，它主要包含以下几个部分:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SRILM学习">
+<meta property="og:url" content="http://firechecking.github.io/2017/02/22/SRILM学习/index.html">
+<meta property="og:site_name" content="Firechecking">
+<meta property="og:description" content="参考文章
+http://blog.csdn.net/zhoubl668/article/details/8365716
+
+SRILM简介SRILM主要用来构建和应用统计语言模型，主要用于语音识别，统计标注和切分，以及机器翻译，它主要包含以下几个部分:">
+<meta property="og:updated_time" content="2017-02-27T07:13:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SRILM学习">
+<meta name="twitter:description" content="参考文章
+http://blog.csdn.net/zhoubl668/article/details/8365716
+
+SRILM简介SRILM主要用来构建和应用统计语言模型，主要用于语音识别，统计标注和切分，以及机器翻译，它主要包含以下几个部分:">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://firechecking.github.io/2017/02/22/SRILM学习/"/>
+
+
+
+
+
+  <title> SRILM学习 | Firechecking </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Firechecking</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/02/22/SRILM学习/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="ZZZ">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Firechecking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SRILM学习
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-22T16:46:43+08:00">
+                2017-02-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/语音识别/" itemprop="url" rel="index">
+                    <span itemprop="name">语音识别</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/语音识别/语言模型/" itemprop="url" rel="index">
+                    <span itemprop="name">语言模型</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/02/22/SRILM学习/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/22/SRILM学习/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+          
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_page_pv">
+          总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><ul>
+<li><a href="http://blog.csdn.net/zhoubl668/article/details/8365716" target="_blank" rel="external">http://blog.csdn.net/zhoubl668/article/details/8365716</a></li>
+</ul>
+<h1 id="SRILM简介"><a href="#SRILM简介" class="headerlink" title="SRILM简介"></a>SRILM简介</h1><p>SRILM主要用来构建和应用统计语言模型，主要用于语音识别，统计标注和切分，以及机器翻译，它主要包含以下几个部分:<a id="more"></a></p>
+<ul>
+<li>一组实现的语言模型、支持这些模型的数据结构和各种有用的函数的C++类库；</li>
+<li>一组建立在这些类库基础上的用于执行标准任务的可执行程序，如训练语言模型，在数据集上对这些语言模型进行测试，对文本进行标注或切分等任务。</li>
+<li>一组使相关任务变得容易的各种脚本。</li>
+</ul>
+<p>SRILM的主要目标是支持<code>语言模型的估计和评测</code>。</p>
+<ul>
+<li><p>估计是从训练数据（训练集）中得到一个模型，包括最大似然估计及相应的平滑算法；</p>
+<ul>
+<li><p><a href="http://blog.csdn.net/yanqingan/article/details/6125812" target="_blank" rel="external">最大似然估计</a></p>
+<p>  已知某个随机样本满足某种概率分布，但是其中具体的参数不清楚，参数估计就是通过若干次试验，观察其结果，利用结果推出参数的大概值。最大似然估计是建立在这样的思想上：已知某个参数能使这个样本出现的概率最大，就把这个参数作为估计的真实值。</p>
+<p>  求最大似然函数估计值的一般步骤： </p>
+<ul>
+<li>写出似然函数(给定输出x时，关于参数θ的似然函数等于给定参数θ后变量X的概率)<ul>
+<li>对似然函数取对数，并整理</li>
+<li>求导数</li>
+<li>解似然方程</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>评测则是从测试集中计算其困惑度（MIT自然语言处理概率语言模型有相关介绍）。</p>
+<ul>
+<li><p>迷惑度/困惑度/混乱度（preplexity）</p>
+<p>  其基本思想是给测试集的句子赋予较高概率值的语言模型较好。当语言模型训练完之后，测试集中的句子都是正常的句子，那么训练好的模型就是在测试集上的概率越高越好。困惑度越小，句子概率越大，语言模型越好。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>其最基础和最核心的模块是n-gram模块，这也是最早实现的模块，包括两个工具：ngram-count和ngram，相应的被用来估计语言模型和计算语言模型的困惑度。</p>
+<h1 id="SRILM使用"><a href="#SRILM使用" class="headerlink" title="SRILM使用"></a><a href="http://www.tuicool.com/articles/Mjuiym" target="_blank" rel="external">SRILM使用</a></h1><h2 id="分词与预处理"><a href="#分词与预处理" class="headerlink" title="分词与预处理"></a>分词与预处理</h2><h2 id="小数据"><a href="#小数据" class="headerlink" title="小数据"></a>小数据</h2><p>假设有去除特殊符号的训练文本trainfile.txt，以及测试文本testfile.txt，那么训练一个语言模型以及对其进行评测的步骤如下：</p>
+<ol>
+<li><p>词频统计</p>
+<pre><code>ngram-count -text trainfile.txt -order 3 -write trainfile.count
+</code></pre><p> 其中-order 3为3-gram，trainfile.count为统计词频的文本</p>
+</li>
+<li><p>模型训练</p>
+<pre><code>ngram-count -read trainfile.count -order 3 -lm trainfile.lm  -interpolate -kndiscount
+</code></pre><p> 其中trainfile.lm为生成的语言模型，-interpolate和-kndiscount为插值与折回参数</p>
+</li>
+<li><p>测试（困惑度计算）</p>
+<p>  ngram -ppl testfile.txt -order 3 -lm trainfile.lm -debug 2 &gt; file.ppl<br>其中testfile.txt为测试文本，-debug 2为对每一行进行困惑度计算，类似还有-debug 0 , -debug 1, -debug 3等，最后  将困惑度的结果输出到file.ppl。</p>
+</li>
+</ol>
+<h2 id="大数据（BigLM）"><a href="#大数据（BigLM）" class="headerlink" title="大数据（BigLM）"></a>大数据（BigLM）</h2><p>对于大文本的语言模型训练不能使用上面的方法，主要思想是将文本切分，分别计算，然后合并。步骤如下：</p>
+<ol>
+<li><p>切分数据</p>
+<pre><code>split -l 10000 trainfile.txt filedir/
+</code></pre><p> 即每10000行数据为一个新文本存到filedir目录下。</p>
+</li>
+<li><p>对每个文本统计词频</p>
+<pre><code>make-bath-counts filepath.txt 1 cat ./counts -order 3
+</code></pre><p> 其中filepath.txt为切分文件的全路径，可以用命令实现：</p>
+<pre><code>ls $(echo $PWD)/* &gt; filepath.txt
+</code></pre><p> 将统计的词频结果存放在counts目录下</p>
+</li>
+<li><p>合并counts文本并压缩</p>
+<pre><code>merge-batch-counts ./counts
+</code></pre></li>
+<li><p>训练语言模型</p>
+<pre><code>make-big-lm -read ../counts/*.ngrams.gz -lm ../split.lm -order 3
+</code></pre><p> 用法同ngram-counts</p>
+</li>
+<li><p>测评（计算困惑度）</p>
+<pre><code>ngram -ppl filepath.txt -order 3 -lm split.lm -debug 2 &gt; file.ppl
+</code></pre></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/语音识别/" rel="tag"># 语音识别</a>
+          
+            <a href="/tags/语言模型/" rel="tag"># 语言模型</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/22/HMM学习/" rel="next" title="HMM学习">
+                <i class="fa fa-chevron-left"></i> HMM学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/23/jieba中文分词/" rel="prev" title="jieba中文分词">
+                jieba中文分词 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="2017/02/22/SRILM学习/"
+           data-title="SRILM学习" data-url="http://firechecking.github.io/2017/02/22/SRILM学习/">
+      </div>
+      <!-- 多说评论框 end -->
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"firechecking"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ZZZ" />
+          <p class="site-author-name" itemprop="name">ZZZ</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baidu.com/" title="百度" target="_blank">百度</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文章"><span class="nav-number">1.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SRILM简介"><span class="nav-number">2.</span> <span class="nav-text">SRILM简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SRILM使用"><span class="nav-number">3.</span> <span class="nav-text">SRILM使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分词与预处理"><span class="nav-number">3.1.</span> <span class="nav-text">分词与预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小数据"><span class="nav-number">3.2.</span> <span class="nav-text">小数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#大数据（BigLM）"><span class="nav-number">3.3.</span> <span class="nav-text">大数据（BigLM）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZZZ</span>
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+<span id="busuanzi_container_site_uv">本站总访问量<span id="busuanzi_value_site_uv"></span>次</span>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"firechecking"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

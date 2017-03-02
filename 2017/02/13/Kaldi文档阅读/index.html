@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习,Kaldi,语音识别," />
+  <meta name="keywords" content="机器学习,语音识别,Kaldi," />
 
 
 
@@ -92,7 +92,7 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
 <meta property="og:site_name" content="Firechecking">
 <meta property="og:description" content="Modules官方文档http://kaldi-asr.org/doc/index.html
 Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016/06/81/">
-<meta property="og:updated_time" content="2017-02-14T08:06:56.000Z">
+<meta property="og:updated_time" content="2017-02-15T08:46:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kaldi文档阅读">
 <meta name="twitter:description" content="Modules官方文档http://kaldi-asr.org/doc/index.html
@@ -302,9 +302,6 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <span id="busuanzi_container_page_pv">
-  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
-</span>
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-13T11:44:54+08:00">
                 2017-02-13
               </time>
@@ -378,10 +375,10 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
           
           
           
+          <span class="post-meta-divider">|</span>
           <span id="busuanzi_container_page_pv">
-          本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          总阅读量<span id="busuanzi_value_page_pv"></span>次
           </span>
-
           
           
 
@@ -402,6 +399,9 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
       
         <h1 id="Modules"><a href="#Modules" class="headerlink" title="Modules"></a>Modules</h1><h2 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h2><p><a href="http://kaldi-asr.org/doc/index.html" target="_blank" rel="external">http://kaldi-asr.org/doc/index.html</a></p>
 <h2 id="Mac-OSX-10-11-5下的Kaldi安装与部署教程"><a href="#Mac-OSX-10-11-5下的Kaldi安装与部署教程" class="headerlink" title="Mac OSX 10.11.5下的Kaldi安装与部署教程"></a>Mac OSX 10.11.5下的Kaldi安装与部署教程</h2><p><a href="https://changkun.us/archives/2016/06/81/" target="_blank" rel="external">https://changkun.us/archives/2016/06/81/</a><a id="more"></a></p>
+<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><ul>
+<li><a href="http://www.leiphone.com/news/201701/ZEDsG4fOpI2zr2OA.html" target="_blank" rel="external">从声学模型算法总结 2016 年语音识别的重大进步</a></li>
+</ul>
 <h2 id="About-the-Kaldi-project"><a href="#About-the-Kaldi-project" class="headerlink" title="About the Kaldi project"></a>About the Kaldi project</h2><ul>
 <li>compile against the OpenFst toolkit</li>
 <li>intended audience is speech recognition researchers or researchers-in-training. In general, Kaldi is not a speech recognition toolkit “for dummies.”</li>
@@ -465,9 +465,68 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
 </li>
 </ol>
 <h3 id="Reading-and-modifying-the-code"><a href="#Reading-and-modifying-the-code" class="headerlink" title="Reading and modifying the code"></a>Reading and modifying the code</h3><ol>
-<li>Common utilities<br> * </li>
+<li>Common utilities<ul>
+<li>base/kaldi-common.h</li>
+<li>This #includes a number of things from the base/ directory that are used by almost every Kaldi program.</li>
+<li>the matrix/ directory only depends on the base/ directory.</li>
+</ul>
+</li>
+<li>Matrix library<ul>
+<li>This library is basically a C++ wrapper for BLAS and LAPACK</li>
+</ul>
+</li>
+<li>Acoustic modeling code<ul>
+<li>gmm/diag-gmm.h (this class stores a Gaussian Mixture Model)。This is just a single GMM, not a whole collection of GMMs</li>
+<li>gmm/am-diag-gmm.h; this class stores a collection of GMMs</li>
+</ul>
+</li>
+<li>Feature extraction code<ul>
+<li>MfccOptions struct give some idea what kind of options are supported in MFCC feature extraction</li>
+</ul>
+</li>
+<li>Acoustic decision-tree and HMM topology code<ul>
+<li>tree/build-tree.h is the main top-level function for building the decision tree. returns a pointer the type EventMap. </li>
+<li>EventMap is a type that stores a function from a set of (key, value) pairs to an integer. but the keys represent phonetic-context positions (typically 0, 1 or 2. There is also a special key, -1, that roughly represents the position in the HMM.) and the values represent phones.</li>
+<li>In hmm/hmm-topology.h. Class HmmTopology defines a set of HMM topologies for a number of phones.(对每个音素的隐马尔科夫矩阵)</li>
+</ul>
+</li>
 </ol>
-
+<h2 id="Kaldi-for-Dummies-tutorial"><a href="#Kaldi-for-Dummies-tutorial" class="headerlink" title="Kaldi for Dummies tutorial"></a>Kaldi for Dummies tutorial</h2><h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><ul>
+<li>This is a step by step tutorial for absolute beginners on how to create a simple ASR (Automatic Speech Recognition) system in Kaldi toolkit using your own set of data.</li>
+<li>You will learn how to install Kaldi, how to make it work and how to run an ASR system using your own audio data. As an effect you will get your first speech decoding results.</li>
+</ul>
+<h3 id="Environment"><a href="#Environment" class="headerlink" title="Environment"></a>Environment</h3><ul>
+<li>use Linux(write with the environment Ubuntu 14.10)</li>
+<li>kaldi-trunk - main Kaldi directory which contains:<ul>
+<li>egs – example scripts allowing you to quickly build ASR systems for over 30 popular speech corporas (documentation is attached for each project)</li>
+<li>misc – additional tools and supplies, not needed for proper Kaldi functionality</li>
+<li>src – Kaldi source code</li>
+<li>tools – useful components and external tools</li>
+<li>windows – tools for running Kaldi using Windows.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Your-exemplary-project"><a href="#Your-exemplary-project" class="headerlink" title="Your exemplary project"></a>Your exemplary project</h3><ul>
+<li>You have some amount of audio data that contain only spoken digits by at least several different speakers.</li>
+</ul>
+<h3 id="Data-preparation"><a href="#Data-preparation" class="headerlink" title="Data preparation"></a>Data preparation</h3><ol>
+<li>Audio data<ul>
+<li>a set of 100 files</li>
+<li>10 different speakers</li>
+<li>Task<ul>
+<li>put all of one person’s audio files to test folder. Put the rest (9 speakers) into train folder</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Acoustic data<ul>
+<li>some text files that will allow Kaldi to communicate with your audio data.</li>
+<li>a text file with some number of strings</li>
+</ul>
+</li>
+<li>Language data<h3 id="Project-finalization"><a href="#Project-finalization" class="headerlink" title="Project finalization"></a>Project finalization</h3><h3 id="Running-scripts-creation"><a href="#Running-scripts-creation" class="headerlink" title="Running scripts creation"></a>Running scripts creation</h3><h3 id="Getting-results"><a href="#Getting-results" class="headerlink" title="Getting results"></a>Getting results</h3></li>
+</ol>
+<h2 id="Examples-included-with-Kaldi"><a href="#Examples-included-with-Kaldi" class="headerlink" title="Examples included with Kaldi"></a>Examples included with Kaldi</h2>
       
     </div>
 
@@ -492,9 +551,9 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
           
             <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
           
-            <a href="/tags/Kaldi/" rel="tag"># Kaldi</a>
-          
             <a href="/tags/语音识别/" rel="tag"># 语音识别</a>
+          
+            <a href="/tags/Kaldi/" rel="tag"># Kaldi</a>
           
         </div>
       
@@ -604,7 +663,7 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -613,7 +672,7 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -622,7 +681,7 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -671,7 +730,7 @@ Mac OSX 10.11.5下的Kaldi安装与部署教程https://changkun.us/archives/2016
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Modules"><span class="nav-number">1.</span> <span class="nav-text">Modules</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#官方文档"><span class="nav-number">1.1.</span> <span class="nav-text">官方文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mac-OSX-10-11-5下的Kaldi安装与部署教程"><span class="nav-number">1.2.</span> <span class="nav-text">Mac OSX 10.11.5下的Kaldi安装与部署教程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#About-the-Kaldi-project"><span class="nav-number">1.3.</span> <span class="nav-text">About the Kaldi project</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Software-required-to-install-and-run-Kaldi"><span class="nav-number">1.4.</span> <span class="nav-text">Software required to install and run Kaldi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kaldi-tutorial"><span class="nav-number">1.5.</span> <span class="nav-text">Kaldi tutorial</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prerequisites"><span class="nav-number">1.5.1.</span> <span class="nav-text">Prerequisites</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview-of-the-distribution"><span class="nav-number">1.5.2.</span> <span class="nav-text">Overview of the distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Running-the-example-scripts"><span class="nav-number">1.5.3.</span> <span class="nav-text">Running the example scripts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reading-and-modifying-the-code"><span class="nav-number">1.5.4.</span> <span class="nav-text">Reading and modifying the code</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Modules"><span class="nav-number">1.</span> <span class="nav-text">Modules</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#官方文档"><span class="nav-number">1.1.</span> <span class="nav-text">官方文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mac-OSX-10-11-5下的Kaldi安装与部署教程"><span class="nav-number">1.2.</span> <span class="nav-text">Mac OSX 10.11.5下的Kaldi安装与部署教程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关文章"><span class="nav-number">1.3.</span> <span class="nav-text">相关文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#About-the-Kaldi-project"><span class="nav-number">1.4.</span> <span class="nav-text">About the Kaldi project</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Software-required-to-install-and-run-Kaldi"><span class="nav-number">1.5.</span> <span class="nav-text">Software required to install and run Kaldi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kaldi-tutorial"><span class="nav-number">1.6.</span> <span class="nav-text">Kaldi tutorial</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prerequisites"><span class="nav-number">1.6.1.</span> <span class="nav-text">Prerequisites</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview-of-the-distribution"><span class="nav-number">1.6.2.</span> <span class="nav-text">Overview of the distribution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Running-the-example-scripts"><span class="nav-number">1.6.3.</span> <span class="nav-text">Running the example scripts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reading-and-modifying-the-code"><span class="nav-number">1.6.4.</span> <span class="nav-text">Reading and modifying the code</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kaldi-for-Dummies-tutorial"><span class="nav-number">1.7.</span> <span class="nav-text">Kaldi for Dummies tutorial</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction"><span class="nav-number">1.7.1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Environment"><span class="nav-number">1.7.2.</span> <span class="nav-text">Environment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Your-exemplary-project"><span class="nav-number">1.7.3.</span> <span class="nav-text">Your exemplary project</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-preparation"><span class="nav-number">1.7.4.</span> <span class="nav-text">Data preparation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Project-finalization"><span class="nav-number">1.7.5.</span> <span class="nav-text">Project finalization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Running-scripts-creation"><span class="nav-number">1.7.6.</span> <span class="nav-text">Running scripts creation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Getting-results"><span class="nav-number">1.7.7.</span> <span class="nav-text">Getting results</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Examples-included-with-Kaldi"><span class="nav-number">1.8.</span> <span class="nav-text">Examples included with Kaldi</span></a></li></ol></li></ol></div>
             
 
           </div>

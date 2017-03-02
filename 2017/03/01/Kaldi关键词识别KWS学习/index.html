@@ -1,0 +1,930 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习,语音识别,Kaldi,KWS,关键词识别," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="参考文档
+http://www.kaldi-asr.org/doc/kws.html
+
+Introduction
+Kaldi中的关键词识别包括以下两部分：
+关键词的快速检索
+字典以外(OOV, out-of-vocabulary)的关键词处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kaldi关键词识别KWS学习">
+<meta property="og:url" content="http://firechecking.github.io/2017/03/01/Kaldi关键词识别KWS学习/index.html">
+<meta property="og:site_name" content="Firechecking">
+<meta property="og:description" content="参考文档
+http://www.kaldi-asr.org/doc/kws.html
+
+Introduction
+Kaldi中的关键词识别包括以下两部分：
+关键词的快速检索
+字典以外(OOV, out-of-vocabulary)的关键词处理">
+<meta property="og:updated_time" content="2017-03-02T11:05:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kaldi关键词识别KWS学习">
+<meta name="twitter:description" content="参考文档
+http://www.kaldi-asr.org/doc/kws.html
+
+Introduction
+Kaldi中的关键词识别包括以下两部分：
+关键词的快速检索
+字典以外(OOV, out-of-vocabulary)的关键词处理">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://firechecking.github.io/2017/03/01/Kaldi关键词识别KWS学习/"/>
+
+
+
+
+
+  <title> Kaldi关键词识别KWS学习 | Firechecking </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Firechecking</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/03/01/Kaldi关键词识别KWS学习/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="ZZZ">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Firechecking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Kaldi关键词识别KWS学习
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-01T17:13:57+08:00">
+                2017-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/语音识别/" itemprop="url" rel="index">
+                    <span itemprop="name">语音识别</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/语音识别/Kaldi/" itemprop="url" rel="index">
+                    <span itemprop="name">Kaldi</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/01/Kaldi关键词识别KWS学习/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/01/Kaldi关键词识别KWS学习/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+          
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_page_pv">
+          总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a href="http://www.kaldi-asr.org/doc/kws.html" target="_blank" rel="external">http://www.kaldi-asr.org/doc/kws.html</a></li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><ol>
+<li>Kaldi中的关键词识别包括以下两部分：<ol>
+<li>关键词的快速检索</li>
+<li>字典以外(OOV, out-of-vocabulary)的关键词处理<a id="more"></a></li>
+</ol>
+</li>
+<li>在Kaldi中，关键词识别(KWS)和大词汇量连续识别(LVCSR)都是基于权重有限状态转换(WFST)，因此关键词识别不光能对词进行识别，也能对音节、音素等进行识别</li>
+<li>在kaldi官方文档中，KWS介绍内容包括以下三部分：<ol>
+<li>一个最基本、最典型的KWS系统组成部分</li>
+<li>如何使用代理关建词(proxy keywords)来处理字典以外的关键词</li>
+<li>位于egs/babel/下，和KWS相关的脚本</li>
+</ol>
+</li>
+</ol>
+<h1 id="Typical-Kaldi-KWS-System"><a href="#Typical-Kaldi-KWS-System" class="headerlink" title="Typical Kaldi KWS System"></a>Typical Kaldi KWS System</h1><h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><ul>
+<li><a href="http://www.clsp.jhu.edu/~guoguo/papers/icassp2013_lexicon_value.pdf" target="_blank" rel="external">Quantifying the Value of Pronunciation Lexicons for Keyword Search in Low Resource Languages”, G. Chen, S. Khudanpur, D. Povey, J. Trmal, D. Yarowsky and O. Yilmaz</a></li>
+</ul>
+<h2 id="KWS系统组成"><a href="#KWS系统组成" class="headerlink" title="KWS系统组成"></a>KWS系统组成</h2><ol>
+<li>LVCSR：对待查询的关键词集合进行解码，并生成相应的lattice</li>
+<li>KWS：对lattice进行index，并根据生成的index来查找关键词</li>
+</ol>
+<h3 id="LVCSR"><a href="#LVCSR" class="headerlink" title="LVCSR"></a>LVCSR</h3><ol>
+<li>基本的LVCSR系统是一个SGMM(子空间混合高斯模型)+MMI(最大互信息)系统，使用PLP(<a href="http://blog.csdn.net/lovewubo/article/details/37937377" target="_blank" rel="external">线性预测分析</a>)获取13位的声学特征</li>
+<li>然后采用最大似然声学训练：以flat-start的上下文独立音素HMM模型进行初始化，生成发音人自适应的triphone HMM-GMM模型。</li>
+<li>接下来使用不同的发音人训练数据，训练处一个通用模型，然后将模型用于训练HMM发射概率的子空间高斯混合模型</li>
+<li>最后，所有的训练语音由SGMM进行编码，并使用BMMI来训练SGMM模型参数，详细的执行脚本：<code>egs/babel/s5b/run-1-main.sh</code></li>
+<li>除SGMM+MMI系统之外，还可以使用如DNN(<code>egs/babel/s5b/run-2a-nnet-gpu.sh</code>)、 bottleneck feature system(<code>egs/babel/s5b/run-8a-kaldi-bnf.sh</code>)等</li>
+<li>以上系统的目的都是为同样的搜索集编码并产生lattice，然后再进入KWS模块进行index和search</li>
+<li>Lattices<ol>
+<li>LVCSR产生lattices采用论文中的方法<a href="https://wiki.inf.ed.ac.uk/twiki/pub/CSTR/ListenSemester2201314/taslp_2011.pdf" target="_blank" rel="external">“Lattice indexing for spoken term detection”, D. Can, M. Saraclar, Audio, Speech, and Language Processing</a></li>
+<li>搜索集的lattice由WFST转换成一个factor transducer，记录了开始时间、结束时间、后验概率。</li>
+<li>上文生成的factor transducer是lattice中所有词序列的倒置索引（inverted index）。当给定一个关键词时，建立一个简单的有限状态机，其接受关键词作为输入，并使用factor transducer对关键词进行处理，来表示关键词在搜索集的所有查找信息，并包括每次发现的录音文件id、开始、结束时间，lattice后验概率</li>
+<li>这些查找信息按照后验概率进行保存，并使用”Rapid and Accurate Spoken Term Detection”中的方法进行YES/NO判断</li>
+</ol>
+</li>
+</ol>
+<h1 id="Proxy-keywords"><a href="#Proxy-keywords" class="headerlink" title="Proxy keywords"></a>Proxy keywords</h1><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="http://www.clsp.jhu.edu/~guoguo/papers/asru2013_proxy_keyword.pdf" target="_blank" rel="external">“Using Proxies for OOV Keywords in the Keyword Search Task”, G. Chen, O. Yilmaz, J. Trmal, D. Povey, S. Khudanpur</a></p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><ol>
+<li>解决lattice中的OOV(未收录词)问题。如果一个关键词没有在LVCSR的词汇表中，即使在搜索集录音文件中有这个关键词的发音，它也不会出现在查找lattice中。因此需要有方法来解决OOV的关键词查找问题。</li>
+</ol>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ol>
+<li>Kaldi的KWS使用的方法是，在词汇表中找到一系列和关键词发音近似的词，以这些词作为关键词的代理词汇</li>
+<li>“Low-Resource Open Vocabulary Keyword Search Using Point Process Models”</li>
+<li>Proxy keyword方法是模糊搜索方法，不仅可以用来解决OOV关键词问题，还能用于改善IV(in-vocabulary)关键词问题</li>
+<li>代理词产生公式如下：<br>$$K^{‘}=Project(ShortestPath(prune(prune(K\cdot L_2\cdot E^{‘})\cdot L_{1}^{-1})))$$<br>其中$K$是原始关键词，$L_2$是一个包含$K$发音的字典，$E^{‘}$是编辑距离转换器，包括由训练集计算得到的发音困惑度。$L_1$是原始字典。$K^{‘}$是包含一系列与$K$发音相似IV词的WFST，然后将这些相似词当做关键词进行查找</li>
+<li>在上式中的prune(剪枝)是必须的，特别是在词汇量很大的时候。</li>
+</ol>
+<h1 id="Babel-Scripts"><a href="#Babel-Scripts" class="headerlink" title="Babel Scripts"></a>Babel Scripts</h1><h2 id="使用Bebel中的脚本进行"><a href="#使用Bebel中的脚本进行" class="headerlink" title="使用Bebel中的脚本进行"></a>使用Bebel中的脚本进行</h2><ol>
+<li>进入目录egs/babel/s5b/</li>
+<li>安装F4DE，并添加到path.sh</li>
+<li>修改cmd.sh，使cmd.sh指向自己的数据集</li>
+<li><p>将conf/languages目录下的某一个文件指向./lang.conf。如：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ln -s conf/languages/105-turkish-limitedLP.official.conf lang.conf</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改./lang.conf指向自己的数据</p>
+</li>
+<li>运行run-1-main.sh来建立LVCSR系统</li>
+<li>运行run-2-segmentation.sh来产生评估数据</li>
+<li>运行run-4-anydecode.sh，对评估数据进行解码，产生index并搜索关键词</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ol>
+<li>类似的可以建立DNN系统，BNF系统，Semi-supervised系统等。</li>
+<li>KWS内容在run-4-anydecode.sh中，下文将对关键词搜索进行详细说明。工作前提是已经对搜索集进行解码，并产生了lattices（run-1-main.sh）</li>
+</ol>
+<h1 id="Prepare-KWS-data"><a href="#Prepare-KWS-data" class="headerlink" title="Prepare KWS data"></a>Prepare KWS data</h1><ol>
+<li>如果有一个搜索集dev10h.uem，则会在相应目录建立data/dev10h.uem/kws</li>
+<li>建立data/dev10h.uem/kws中的数据，需要获取或生成以下三个文件：<ol>
+<li>ecf文件：包含搜索集信息</li>
+<li>kwlist文件：列出所有关键词</li>
+<li>rttm文件：评分文件（rttm文件的产生可以通过使用一个训练好的模型来强制对齐搜索集）</li>
+</ol>
+</li>
+</ol>
+<h2 id="文件格式"><a href="#文件格式" class="headerlink" title="文件格式"></a>文件格式</h2><ol>
+<li><p>ECF</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;ecf source_signal_duration=&quot;483.825&quot; language=&quot;&quot; version=&quot;Excluded noscore regions&quot;&gt;</div><div class="line">  &lt;excerpt audio_filename=&quot;YOUR_AUDIO_FILENAME&quot; channel=&quot;1&quot; tbeg=&quot;0.000&quot; dur=&quot;483.825&quot; source_type=&quot;splitcts&quot;/&gt;</div><div class="line">&lt;/ecf&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>KWLIST</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;kwlist ecf_filename=&quot;ecf.xml&quot; language=&quot;tamil&quot; encoding=&quot;UTF-8&quot; compareNormalize=&quot;&quot; version=&quot;Example keywords&quot;&gt;</div><div class="line">  &lt;kw kwid=&quot;KW204-00001&quot;&gt;</div><div class="line">    &lt;kwtext&gt;செய்றத&lt;/kwtext&gt;</div><div class="line">  &lt;/kw&gt;</div><div class="line">  &lt;kw kwid=&quot;KW204-00002&quot;&gt;</div><div class="line">    &lt;kwtext&gt;சொல்லுவியா&lt;/kwtext&gt;</div><div class="line">  &lt;/kw&gt;</div><div class="line">&lt;/kwlist&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>RTTM</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">SPEAKER YOUR_AUDIO_FILENAME 1 5.87 0.370 &lt;NA&gt; &lt;NA&gt; spkr1 &lt;NA&gt;</div><div class="line">LEXEME YOUR_AUDIO_FILENAME 1 5.87 0.370 ஹலோ lex spkr1 0.5</div><div class="line">SPEAKER YOUR_AUDIO_FILENAME 1 8.78 2.380 &lt;NA&gt; &lt;NA&gt; spkr1 &lt;NA&gt;</div><div class="line">LEXEME YOUR_AUDIO_FILENAME 1 8.78 0.300 உம்ம் lex spkr1 0.5</div><div class="line">LEXEME YOUR_AUDIO_FILENAME 1 9.08 0.480 அதான் lex spkr1 0.5</div><div class="line">LEXEME YOUR_AUDIO_FILENAME 1 9.56 0.510 சரியான lex spkr1 0.5</div><div class="line">LEXEME YOUR_AUDIO_FILENAME 1 10.07 0.560 மெசேஜ்டா lex spkr1 0.5</div><div class="line">LEXEME YOUR_AUDIO_FILENAME 1 10.63 0.350 சான்ஸே lex spkr1 0.5</div><div class="line">LEXEME YOUR_AUDIO_FILENAME 1 10.98 0.180 இல்லயே lex spkr1 0.5</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><ol>
+<li><p>数据准备</p>
+<ul>
+<li><p>如果进行基础的KWS，只需要提供以上三个文件，以及语言模型，音频文件，并运行kws_setup.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">local/kws_setup.sh \</div><div class="line"> --case_insensitive $case_insensitive \</div><div class="line"> --rttm-file $my_rttm_file \</div><div class="line"> $my_ecf_file $my_kwlist_file data/lang $dataset_dir</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果需要对OOV关键词进行模糊查找，需要首先得到发音困惑度，并训练一个G2P模型。</p>
+</li>
+</ul>
+</li>
+<li><p>Indexing and searching</p>
+<ul>
+<li>运行前提：已经对训练集进行解码；并且产生了lattices</li>
+<li><p>运行以下脚本完成Indexing和searching</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">local/kws_search.sh --cmd &quot;$cmd&quot; \</div><div class="line">	--max-states $&#123;max_states&#125; --min-lmwt $&#123;min_lmwt&#125; \</div><div class="line">	--max-lmwt $&#123;max_lmwt&#125; --skip-scoring $skip_scoring \</div><div class="line">	--indices-dir $decode_dir/kws_indices $lang_dir $data_dir $decode_dir</div></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/语音识别/" rel="tag"># 语音识别</a>
+          
+            <a href="/tags/Kaldi/" rel="tag"># Kaldi</a>
+          
+            <a href="/tags/KWS/" rel="tag"># KWS</a>
+          
+            <a href="/tags/关键词识别/" rel="tag"># 关键词识别</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/24/语言模型训练/" rel="next" title="语言模型训练">
+                <i class="fa fa-chevron-left"></i> 语言模型训练
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/02/Kaldi中的关键词解释/" rel="prev" title="Kaldi中的关键词解释">
+                Kaldi中的关键词解释 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="2017/03/01/Kaldi关键词识别KWS学习/"
+           data-title="Kaldi关键词识别KWS学习" data-url="http://firechecking.github.io/2017/03/01/Kaldi关键词识别KWS学习/">
+      </div>
+      <!-- 多说评论框 end -->
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"firechecking"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ZZZ" />
+          <p class="site-author-name" itemprop="name">ZZZ</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baidu.com/" title="百度" target="_blank">百度</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">1.</span> <span class="nav-text">参考文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Typical-Kaldi-KWS-System"><span class="nav-number">3.</span> <span class="nav-text">Typical Kaldi KWS System</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#示例"><span class="nav-number">3.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KWS系统组成"><span class="nav-number">3.2.</span> <span class="nav-text">KWS系统组成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LVCSR"><span class="nav-number">3.2.1.</span> <span class="nav-text">LVCSR</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Proxy-keywords"><span class="nav-number">4.</span> <span class="nav-text">Proxy keywords</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.1.</span> <span class="nav-text">参考文献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目的"><span class="nav-number">4.2.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法"><span class="nav-number">4.3.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Babel-Scripts"><span class="nav-number">5.</span> <span class="nav-text">Babel Scripts</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Bebel中的脚本进行"><span class="nav-number">5.1.</span> <span class="nav-text">使用Bebel中的脚本进行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">5.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prepare-KWS-data"><span class="nav-number">6.</span> <span class="nav-text">Prepare KWS data</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文件格式"><span class="nav-number">6.1.</span> <span class="nav-text">文件格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行"><span class="nav-number">6.2.</span> <span class="nav-text">运行</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZZZ</span>
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+<span id="busuanzi_container_site_uv">本站总访问量<span id="busuanzi_value_site_uv"></span>次</span>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"firechecking"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
