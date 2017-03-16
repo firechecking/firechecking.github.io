@@ -1,0 +1,972 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习,Kaldi," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="参考链接
+http://www.kaldi-asr.org/doc/data_prep.html
+
+简介
+文中内容均以最新s5脚本为例
+s5/local目录通常适合数据库相关的脚本
+除了网上下载语言模型外，local目录中还有很多和本地训练语言模型相关的脚本
+数据准备阶段主要涉及两部分：
+数据(data/train/):包括收集到的录音文件
+语言(data/lang/):和语言相关的内容，包括词典">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kaldi训练数据结构及准备">
+<meta property="og:url" content="http://firechecking.github.io/2017/03/02/Kaldi训练数据结构及准备/index.html">
+<meta property="og:site_name" content="Firechecking">
+<meta property="og:description" content="参考链接
+http://www.kaldi-asr.org/doc/data_prep.html
+
+简介
+文中内容均以最新s5脚本为例
+s5/local目录通常适合数据库相关的脚本
+除了网上下载语言模型外，local目录中还有很多和本地训练语言模型相关的脚本
+数据准备阶段主要涉及两部分：
+数据(data/train/):包括收集到的录音文件
+语言(data/lang/):和语言相关的内容，包括词典">
+<meta property="og:updated_time" content="2017-03-13T07:22:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kaldi训练数据结构及准备">
+<meta name="twitter:description" content="参考链接
+http://www.kaldi-asr.org/doc/data_prep.html
+
+简介
+文中内容均以最新s5脚本为例
+s5/local目录通常适合数据库相关的脚本
+除了网上下载语言模型外，local目录中还有很多和本地训练语言模型相关的脚本
+数据准备阶段主要涉及两部分：
+数据(data/train/):包括收集到的录音文件
+语言(data/lang/):和语言相关的内容，包括词典">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://firechecking.github.io/2017/03/02/Kaldi训练数据结构及准备/"/>
+
+
+
+
+
+  <title> Kaldi训练数据结构及准备 | Firechecking </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Firechecking</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/03/02/Kaldi训练数据结构及准备/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="ZZZ">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Firechecking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Kaldi训练数据结构及准备
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-02T21:09:55+08:00">
+                2017-03-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/语音识别/" itemprop="url" rel="index">
+                    <span itemprop="name">语音识别</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/语音识别/Kaldi/" itemprop="url" rel="index">
+                    <span itemprop="name">Kaldi</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/02/Kaldi训练数据结构及准备/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/02/Kaldi训练数据结构及准备/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+          
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_page_pv">
+          总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="http://www.kaldi-asr.org/doc/data_prep.html" target="_blank" rel="external">http://www.kaldi-asr.org/doc/data_prep.html</a></li>
+</ol>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ol>
+<li>文中内容均以最新s5脚本为例</li>
+<li>s5/local目录通常适合数据库相关的脚本</li>
+<li>除了网上下载语言模型外，local目录中还有很多和本地训练语言模型相关的脚本</li>
+<li>数据准备阶段主要涉及两部分：<ol>
+<li>数据(data/train/):包括收集到的录音文件</li>
+<li>语言(data/lang/):和语言相关的内容，包括词典、发音音素等。<a id="more"></a></li>
+</ol>
+</li>
+</ol>
+<h1 id="data-Part"><a href="#data-Part" class="headerlink" title="data Part"></a>data Part</h1><h2 id="text"><a href="#text" class="headerlink" title="text"></a>text</h2><p>包含每个句子的标注文本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/train/text</div><div class="line">sw02001-A_000098-001156 HI UM YEAH I&apos;D LIKE TO TALK ABOUT HOW YOU DRESS FOR WORK AND</div><div class="line">sw02001-A_001980-002131 UM-HUM</div><div class="line">sw02001-A_002736-002893 AND IS</div></pre></td></tr></table></figure>
+<ol>
+<li>每行第一部分是句子ID(utterance-id)，如果有不同发音人，为方便排序，发音人ID(speaker-id)作为句子ID前缀</li>
+<li>第二部分是每个句子的标注文本，对于字典意外的词，会自动在data/lang/oov.txt中记录</li>
+</ol>
+<h2 id="wav-scp"><a href="#wav-scp" class="headerlink" title="wav.scp"></a>wav.scp</h2><p>wav.scp举例内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/train/wav.scp</div><div class="line">sw02001-A /home/dpovey/kaldi-trunk/tools/sph2pipe_v2.5/sph2pipe -f wav -p -c 1 /export/corpora3/LDC/LDC97S62/swb1/sw02001.sph |</div><div class="line">sw02001-B /home/dpovey/kaldi-trunk/tools/sph2pipe_v2.5/sph2pipe -f wav -p -c 2 /export/corpora3/LDC/LDC97S62/swb1/sw02001.sph |</div></pre></td></tr></table></figure>
+<p>文件的固定格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;recording-id&gt; &lt;extended-filename&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>extended-filename：可以指向一个真实文件，也可以是一条可以生成wav文件的命令（注意最后的|为linux管道）</li>
+<li>recording-id指录音文件id，如果没有segments文件，也就是说一个录音文件对于一句话，那么recording-id也就是utterance-id</li>
+<li>wav.scp指向的录音文件必须是单声道，多声道文件必须通过命令制定某一具体声道</li>
+</ol>
+<h2 id="segments（非必需）"><a href="#segments（非必需）" class="headerlink" title="segments（非必需）"></a>segments（非必需）</h2><p>segments举例内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/train/segments</div><div class="line">sw02001-A_000098-001156 sw02001-A 0.98 11.56</div><div class="line">sw02001-A_001980-002131 sw02001-A 19.8 21.31</div><div class="line">sw02001-A_002736-002893 sw02001-A 27.36 28.93</div></pre></td></tr></table></figure>
+<p>文件的固定格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;utterance-id&gt; &lt;recording-id&gt; &lt;segment-begin&gt; &lt;segment-end&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>非必须，标记录音文件中的句子位置，如果每个录音文件只有一句话，则不需要segments文件</li>
+<li>标记一句话在录音文件中的开始和结束为止，单位：秒</li>
+</ol>
+<h2 id="reco2file-and-channel（非必需）"><a href="#reco2file-and-channel（非必需）" class="headerlink" title="reco2file_and_channel（非必需）"></a>reco2file_and_channel（非必需）</h2><p>reco2file_and_channel只用来计算错误率评分，用到的工具是NIST的“sclite”</p>
+<p>reco2file_and_channel举例内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/train/reco2file_and_channel</div><div class="line">sw02001-A sw02001 A</div><div class="line">sw02001-B sw02001 B</div><div class="line">sw02005-A sw02005 A</div></pre></td></tr></table></figure>
+<p>文件的固定格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;recording-id&gt; &lt;filename&gt; &lt;recording-side (A or B)&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>filename指.sph文件名(不包括后缀)(也可以指示stm文件中的内容)</li>
+<li>recording-side特别用于电话录音等文件中存在双方的情况，如果只有一方说话，可以直接标记为A</li>
+</ol>
+<h2 id="utt2spk"><a href="#utt2spk" class="headerlink" title="utt2spk:"></a>utt2spk:</h2><p>utt2spk文件指明每一句话的发言人</p>
+<p>utt2spk举例内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/train/utt2spk</div><div class="line">sw02001-A_000098-001156 2001-A</div><div class="line">sw02001-A_001980-002131 2001-A</div><div class="line">sw02001-A_002736-002893 2001-A</div></pre></td></tr></table></figure>
+<p>文件的固定格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;utterance-id&gt; &lt;speaker-id&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>speaker-id指示大致标注不同发音人，比如区分电话录音双方，并不要求特别准确</li>
+<li>在不清楚发音人情况下，可以使用让speaker-id和utterance-id相同</li>
+</ol>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ol>
+<li>以上所有文件都必须进行排序，一边支持在管道等命令中的正确读取。</li>
+<li><p>在排序时应该定义变量LC_ALL为C，让排序按照C++字符串排序方式进行，否则会找出Kaldi运行出错</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export LC_ALL=C</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果数据包括测试集，可以以stm或glm命名，相应的计算错误率的脚本位于local/score.sh</p>
+</li>
+</ol>
+<h2 id="其它文件"><a href="#其它文件" class="headerlink" title="其它文件"></a>其它文件</h2><p>以下文件都能根据上面提供的文件，使用Kaldi提供的命令生成</p>
+<h3 id="spk2utt"><a href="#spk2utt" class="headerlink" title="spk2utt"></a>spk2utt</h3><ol>
+<li><p>spk2utt使用utt2spk_to_spk2utt.pl脚本，依据utt2spk文件生成</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">utils/utt2spk_to_spk2utt.pl data/train/utt2spk &gt; data/train/spk2utt</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="feats-scp"><a href="#feats-scp" class="headerlink" title="feats.scp"></a>feats.scp</h3><p>feats.scp指示计算得到的句子MFCC特征，其内容太如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/train/feats.scp</div><div class="line">sw02001-A_000098-001156 /home/dpovey/kaldi-trunk/egs/swbd/s5/mfcc/raw_mfcc_train.1.ark:24</div><div class="line">sw02001-A_001980-002131 /home/dpovey/kaldi-trunk/egs/swbd/s5/mfcc/raw_mfcc_train.1.ark:54975</div><div class="line">sw02001-A_002736-002893 /home/dpovey/kaldi-trunk/egs/swbd/s5/mfcc/raw_mfcc_train.1.ark:62762</div></pre></td></tr></table></figure>
+<p>文件的固定格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;utterance-id&gt; &lt;extended-filename-of-features&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>每个feature文件包括一个Kaldi能够识别的矩阵</li>
+<li>通常这个特征矩阵以10ms位单位，每个单位为13维特征向量</li>
+<li>“/home/dpovey/kaldi-trunk/egs/swbd/s5/mfcc/raw_mfcc_train.1.ark:24”意思是在文件“/home/dpovey/kaldi-trunk/egs/swbd/s5/mfcc/raw_mfcc_train.1.ark”中调用fseek()定位到位置24，并读取当前数据</li>
+<li><p>feats.scp文件由以下命令生成</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">steps/make_mfcc.sh --nj 20 --cmd &quot;$train_cmd&quot; data/train exp/make_mfcc/train $mfccdir</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>$mfccdir是用户指定的用于生成ark文件的目录</p>
+<h3 id="cmvn-scp"><a href="#cmvn-scp" class="headerlink" title="cmvn.scp:"></a>cmvn.scp:</h3><p>cmvn.scp文件以speaker-id为index，包含统计得到的倒谱均值和方差归一化。每一个统计为一个2x15的矩阵。</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/train/cmvn.scp</div><div class="line">2001-A /home/dpovey/kaldi-trunk/egs/swbd/s5/mfcc/cmvn_train.ark:7</div><div class="line">2001-B /home/dpovey/kaldi-trunk/egs/swbd/s5/mfcc/cmvn_train.ark:253</div><div class="line">2005-A /home/dpovey/kaldi-trunk/egs/swbd/s5/mfcc/cmvn_train.ark:499</div></pre></td></tr></table></figure>
+</code></pre><p>cmvn.scp文件通过以下命令生成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">steps/compute_cmvn_stats.sh data/train exp/make_mfcc/train $mfccdir</div></pre></td></tr></table></figure>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><ol>
+<li><p>为防止数据准备错误，可以使用以下脚本检查数据格式是否正确</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">utils/validate_data_dir.sh data/train</div></pre></td></tr></table></figure>
+</li>
+<li><p>以下脚本会检查并解决排序错误，并删除掉确实特征文件或标注文本的utterance</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">utils/fix_data_dir.sh data/train</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="lang-Part"><a href="#lang-Part" class="headerlink" title="lang Part"></a>lang Part</h1><h2 id="phones-txt-words-txt"><a href="#phones-txt-words-txt" class="headerlink" title="phones.txt, words.txt"></a>phones.txt, words.txt</h2><p>这两个文件都是OpenFst格式的表文件，每行包含一个符号和一个整数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/lang/phones.txt</div><div class="line">&lt;eps&gt; 0</div><div class="line">SIL 1</div><div class="line">SIL_B 2</div><div class="line">s5# head -3 data/lang/words.txt</div><div class="line">&lt;eps&gt; 0</div><div class="line">!SIL 1</div><div class="line">-&apos;S 2</div></pre></td></tr></table></figure>
+<p>这两个文件用于Kaldi在整数和符号之间进行对应，通常在utils/int2sym.pl和utils/sym2int.pl、以及OpenFst的fstcompile和fstprint中用到</p>
+<h2 id="L-fst"><a href="#L-fst" class="headerlink" title="L.fst"></a>L.fst</h2><ol>
+<li>L.fst是字典的FST存储格式。<a href="http://www.cs.nyu.edu/~mohri/pub/hbka.pdf" target="_blank" rel="external"> “Speech Recognition with Weighted Finite-State Transducers”</a></li>
+<li>L.fst表示的FST，接收音素作为输入，并得到词作为输出</li>
+</ol>
+<h2 id="L-disambig-fst"><a href="#L-disambig-fst" class="headerlink" title="L_disambig.fst"></a>L_disambig.fst</h2><ol>
+<li>L_disambig.fst和L.fst一样是字典的FST，另外还包括一些特殊符号用于消除词与词之间容易产生混淆的连接关系</li>
+</ol>
+<h2 id="oov-txt"><a href="#oov-txt" class="headerlink" title="oov.txt"></a>oov.txt</h2><p>oov.txt只有一行，这一行表面，对于字典中没有收录的词，将会用这一行中的符号进行替代</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">s5# cat data/lang/oov.txt</div><div class="line">&lt;UNK&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>UNK在字典必须只具有一个音素发音，通常为SPN(spoken noise)</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">s5# grep -w UNK data/local/dict/lexicon.txt</div><div class="line">&lt;UNK&gt; SPN</div></pre></td></tr></table></figure>
+<h2 id="oov-int"><a href="#oov-int" class="headerlink" title="oov.int"></a>oov.int</h2><p>oov.int中包含oov.txt中未收录词的整数符号</p>
+<h2 id="topo"><a href="#topo" class="headerlink" title="topo"></a>topo</h2><p>topo文件是用的HMM模型，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">s5# cat data/lang/topo</div><div class="line">&lt;Topology&gt;</div><div class="line">&lt;TopologyEntry&gt;</div><div class="line">&lt;ForPhones&gt;</div><div class="line">21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188</div><div class="line">&lt;/ForPhones&gt;</div><div class="line">&lt;State&gt; 0 &lt;PdfClass&gt; 0 &lt;Transition&gt; 0 0.75 &lt;Transition&gt; 1 0.25 &lt;/State&gt;</div><div class="line">&lt;State&gt; 1 &lt;PdfClass&gt; 1 &lt;Transition&gt; 1 0.75 &lt;Transition&gt; 2 0.25 &lt;/State&gt;</div><div class="line">&lt;State&gt; 2 &lt;PdfClass&gt; 2 &lt;Transition&gt; 2 0.75 &lt;Transition&gt; 3 0.25 &lt;/State&gt;</div><div class="line">&lt;State&gt; 3 &lt;/State&gt;</div><div class="line">&lt;/TopologyEntry&gt;</div><div class="line">&lt;TopologyEntry&gt;</div><div class="line">&lt;ForPhones&gt;</div><div class="line">1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20</div><div class="line">&lt;/ForPhones&gt;</div><div class="line">&lt;State&gt; 0 &lt;PdfClass&gt; 0 &lt;Transition&gt; 0 0.25 &lt;Transition&gt; 1 0.25 &lt;Transition&gt; 2 0.25 &lt;Transition&gt; 3 0.25 &lt;/State&gt;</div><div class="line">&lt;State&gt; 1 &lt;PdfClass&gt; 1 &lt;Transition&gt; 1 0.25 &lt;Transition&gt; 2 0.25 &lt;Transition&gt; 3 0.25 &lt;Transition&gt; 4 0.25 &lt;/State&gt;</div><div class="line">&lt;State&gt; 2 &lt;PdfClass&gt; 2 &lt;Transition&gt; 1 0.25 &lt;Transition&gt; 2 0.25 &lt;Transition&gt; 3 0.25 &lt;Transition&gt; 4 0.25 &lt;/State&gt;</div><div class="line">&lt;State&gt; 3 &lt;PdfClass&gt; 3 &lt;Transition&gt; 1 0.25 &lt;Transition&gt; 2 0.25 &lt;Transition&gt; 3 0.25 &lt;Transition&gt; 4 0.25 &lt;/State&gt;</div><div class="line">&lt;State&gt; 4 &lt;PdfClass&gt; 4 &lt;Transition&gt; 4 0.75 &lt;Transition&gt; 5 0.25 &lt;/State&gt;</div><div class="line">&lt;State&gt; 5 &lt;/State&gt;</div><div class="line">&lt;/TopologyEntry&gt;</div><div class="line">&lt;/Topology&gt;</div></pre></td></tr></table></figure>
+<h2 id="phones"><a href="#phones" class="headerlink" title="phones"></a>phones</h2><p>data/lang/phone/目录中有多个和音素相关的文件，通常具有三个文件版本：</p>
+<ol>
+<li><p>“.txt”</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/lang/phones/context_indep.txt</div><div class="line">SIL</div><div class="line">SIL_B</div><div class="line">SIL_E</div></pre></td></tr></table></figure>
+</li>
+<li><p>“.int”</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">s5# head -3 data/lang/phones/context_indep.int</div><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td></tr></table></figure>
+</li>
+<li><p>“.csl”</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">s5# cat data/lang/phones/context_indep.csl</div><div class="line">1:2:3:4:5:6:7:8:9:10:11:12:13:14:15:16:17:18:19:20</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这三种文件格式通常包含相同的信息，context_indep.txt包含一些不算真正发音的音素，如silence(SIL),spoken noise(SPN),non-spoken noise(NSN),laughter(LAU)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"># cat data/lang/phones/context_indep.txt</div><div class="line">SIL</div><div class="line">SIL_B#词语开始处的SIL</div><div class="line">SIL_E#词语结束处的SIL</div><div class="line">SIL_I#词语中间处的SIL</div><div class="line">SIL_S#独立的SIL</div><div class="line">SPN</div><div class="line">SPN_B</div><div class="line">SPN_E</div><div class="line">SPN_I</div><div class="line">SPN_S</div><div class="line">NSN</div><div class="line">NSN_B</div><div class="line">NSN_E</div><div class="line">NSN_I</div><div class="line">NSN_S</div><div class="line">LAU</div><div class="line">LAU_B</div><div class="line">LAU_E</div><div class="line">LAU_I</div><div class="line">LAU_S</div></pre></td></tr></table></figure>
+<ol>
+<li>sets.txt</li>
+</ol>
+<p>包含所有音素的集合</p>
+<ol>
+<li>roots.txt</li>
+</ol>
+<p>roots.txt中包含建立音素相关的决策树所需的信息，示例内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">head data/lang/phones/roots.txt</div><div class="line">shared split SIL SIL_B SIL_E SIL_I SIL_S</div><div class="line">shared split SPN SPN_B SPN_E SPN_I SPN_S</div><div class="line">shared split NSN NSN_B NSN_E NSN_I NSN_S</div><div class="line">shared split LAU LAU_B LAU_E LAU_I LAU_S</div><div class="line">...</div><div class="line">shared split B_B B_E B_I B_S</div></pre></td></tr></table></figure>
+<p>同一样的shared split SIL SIL_B SIL_E SIL_I SIL_S表示SIL SIL_B SIL_E SIL_I SIL_S五个音素在决策树中具有同一个根节点</p>
+<h1 id="建立lang目录"><a href="#建立lang目录" class="headerlink" title="建立lang目录"></a>建立lang目录</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">utils/prepare_lang.sh data/local/dict &quot;&lt;UNK&gt;&quot; data/local/lang data/lang</div></pre></td></tr></table></figure>
+<ol>
+<li>输入data/local/dict</li>
+<li>“\<unk>”,替换OOV</unk></li>
+<li>data/local/lang/脚本需要用得到临时输出文件夹</li>
+<li>data/lang/结果输出文件夹</li>
+<li>其中需要人工创建的是data/local/dict/目录下的内容</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/Kaldi/" rel="tag"># Kaldi</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/02/Kaldi中的关键词解释/" rel="next" title="Kaldi中的关键词解释">
+                <i class="fa fa-chevron-left"></i> Kaldi中的关键词解释
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/13/Kaldi中的决策树/" rel="prev" title="Kaldi中的决策树">
+                Kaldi中的决策树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="2017/03/02/Kaldi训练数据结构及准备/"
+           data-title="Kaldi训练数据结构及准备" data-url="http://firechecking.github.io/2017/03/02/Kaldi训练数据结构及准备/">
+      </div>
+      <!-- 多说评论框 end -->
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"firechecking"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ZZZ" />
+          <p class="site-author-name" itemprop="name">ZZZ</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baidu.com/" title="百度" target="_blank">百度</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">1.</span> <span class="nav-text">参考链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#data-Part"><span class="nav-number">3.</span> <span class="nav-text">data Part</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#text"><span class="nav-number">3.1.</span> <span class="nav-text">text</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wav-scp"><span class="nav-number">3.2.</span> <span class="nav-text">wav.scp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#segments（非必需）"><span class="nav-number">3.3.</span> <span class="nav-text">segments（非必需）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reco2file-and-channel（非必需）"><span class="nav-number">3.4.</span> <span class="nav-text">reco2file_and_channel（非必需）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#utt2spk"><span class="nav-number">3.5.</span> <span class="nav-text">utt2spk:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number">3.6.</span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它文件"><span class="nav-number">3.7.</span> <span class="nav-text">其它文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spk2utt"><span class="nav-number">3.7.1.</span> <span class="nav-text">spk2utt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#feats-scp"><span class="nav-number">3.7.2.</span> <span class="nav-text">feats.scp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cmvn-scp"><span class="nav-number">3.7.3.</span> <span class="nav-text">cmvn.scp:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它"><span class="nav-number">3.8.</span> <span class="nav-text">其它</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lang-Part"><span class="nav-number">4.</span> <span class="nav-text">lang Part</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#phones-txt-words-txt"><span class="nav-number">4.1.</span> <span class="nav-text">phones.txt, words.txt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#L-fst"><span class="nav-number">4.2.</span> <span class="nav-text">L.fst</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#L-disambig-fst"><span class="nav-number">4.3.</span> <span class="nav-text">L_disambig.fst</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oov-txt"><span class="nav-number">4.4.</span> <span class="nav-text">oov.txt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oov-int"><span class="nav-number">4.5.</span> <span class="nav-text">oov.int</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#topo"><span class="nav-number">4.6.</span> <span class="nav-text">topo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#phones"><span class="nav-number">4.7.</span> <span class="nav-text">phones</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#建立lang目录"><span class="nav-number">5.</span> <span class="nav-text">建立lang目录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZZZ</span>
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+<span id="busuanzi_container_site_uv">本站总访问量<span id="busuanzi_value_site_uv"></span>次</span>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"firechecking"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

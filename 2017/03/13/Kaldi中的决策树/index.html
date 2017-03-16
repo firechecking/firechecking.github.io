@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="树莓派," />
+  <meta name="keywords" content="机器学习,Kaldi," />
 
 
 
@@ -84,40 +84,39 @@
 
 
 
-<meta name="description" content="安装Miniconda
-下载Miniconda安装包–Miniconda-latest-Linux-armv7l.shhttps://repo.continuum.io/miniconda/
+<meta name="description" content="参考链接
+http://www.kaldi-asr.org/doc/tree_externals.html
+http://www.kaldi-asr.org/doc/tree_internals.html
+HTK语音识别中的决策树
+决策树在Kaldi中如何使用
 
-
-安装numpy conda install numpy
-安装scipy conda install scipy
-安装pandas conda install pandas
-安装mongoDB
-http:">
+为什么使用决策树
+Kaldi在语音识别时，最小识别单位是音素。在单音素(monophone)识别时，不考虑音素所处的位置，因此单音素模型">
 <meta property="og:type" content="article">
-<meta property="og:title" content="树莓派配置Python科学计算环境">
-<meta property="og:url" content="http://firechecking.github.io/2017/02/16/树莓派配置Python科学计算环境/index.html">
+<meta property="og:title" content="Kaldi中的决策树">
+<meta property="og:url" content="http://firechecking.github.io/2017/03/13/Kaldi中的决策树/index.html">
 <meta property="og:site_name" content="Firechecking">
-<meta property="og:description" content="安装Miniconda
-下载Miniconda安装包–Miniconda-latest-Linux-armv7l.shhttps://repo.continuum.io/miniconda/
+<meta property="og:description" content="参考链接
+http://www.kaldi-asr.org/doc/tree_externals.html
+http://www.kaldi-asr.org/doc/tree_internals.html
+HTK语音识别中的决策树
+决策树在Kaldi中如何使用
 
-
-安装numpy conda install numpy
-安装scipy conda install scipy
-安装pandas conda install pandas
-安装mongoDB
-http:">
-<meta property="og:updated_time" content="2017-03-07T09:07:12.000Z">
+为什么使用决策树
+Kaldi在语音识别时，最小识别单位是音素。在单音素(monophone)识别时，不考虑音素所处的位置，因此单音素模型">
+<meta property="og:image" content="http://s6.sinaimg.cn/mw690/0020RyYWzy6Lt1uZVVH75&690">
+<meta property="og:updated_time" content="2017-03-13T08:12:48.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="树莓派配置Python科学计算环境">
-<meta name="twitter:description" content="安装Miniconda
-下载Miniconda安装包–Miniconda-latest-Linux-armv7l.shhttps://repo.continuum.io/miniconda/
+<meta name="twitter:title" content="Kaldi中的决策树">
+<meta name="twitter:description" content="参考链接
+http://www.kaldi-asr.org/doc/tree_externals.html
+http://www.kaldi-asr.org/doc/tree_internals.html
+HTK语音识别中的决策树
+决策树在Kaldi中如何使用
 
-
-安装numpy conda install numpy
-安装scipy conda install scipy
-安装pandas conda install pandas
-安装mongoDB
-http:">
+为什么使用决策树
+Kaldi在语音识别时，最小识别单位是音素。在单音素(monophone)识别时，不考虑音素所处的位置，因此单音素模型">
+<meta name="twitter:image" content="http://s6.sinaimg.cn/mw690/0020RyYWzy6Lt1uZVVH75&690">
 
 
 
@@ -145,13 +144,13 @@ http:">
 
 
 
-  <link rel="canonical" href="http://firechecking.github.io/2017/02/16/树莓派配置Python科学计算环境/"/>
+  <link rel="canonical" href="http://firechecking.github.io/2017/03/13/Kaldi中的决策树/"/>
 
 
 
 
 
-  <title> 树莓派配置Python科学计算环境 | Firechecking </title>
+  <title> Kaldi中的决策树 | Firechecking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -284,7 +283,7 @@ http:">
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/02/16/树莓派配置Python科学计算环境/">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/03/13/Kaldi中的决策树/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="ZZZ">
@@ -308,7 +307,7 @@ http:">
             
             
               
-                树莓派配置Python科学计算环境
+                Kaldi中的决策树
               
             
           </h1>
@@ -323,8 +322,8 @@ http:">
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-16T21:24:43+08:00">
-                2017-02-16
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-13T16:03:53+08:00">
+                2017-03-13
               </time>
             
 
@@ -346,8 +345,8 @@ http:">
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/树莓派/" itemprop="url" rel="index">
-                    <span itemprop="name">树莓派</span>
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
                   </a>
                 </span>
 
@@ -357,8 +356,19 @@ http:">
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/树莓派/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
+                  <a href="/categories/机器学习/语音识别/" itemprop="url" rel="index">
+                    <span itemprop="name">语音识别</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/语音识别/Kaldi/" itemprop="url" rel="index">
+                    <span itemprop="name">Kaldi</span>
                   </a>
                 </span>
 
@@ -375,8 +385,8 @@ http:">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/02/16/树莓派配置Python科学计算环境/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/16/树莓派配置Python科学计算环境/" itemprop="commentCount"></span>
+                <a href="/2017/03/13/Kaldi中的决策树/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/13/Kaldi中的决策树/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -407,20 +417,17 @@ http:">
       
 
       
-        <ol>
-<li>安装Miniconda<ol>
-<li>下载Miniconda安装包–Miniconda-latest-Linux-armv7l.sh<br><a href="https://repo.continuum.io/miniconda/" target="_blank" rel="external">https://repo.continuum.io/miniconda/</a></li>
+        <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="http://www.kaldi-asr.org/doc/tree_externals.html" target="_blank" rel="external">http://www.kaldi-asr.org/doc/tree_externals.html</a></li>
+<li><a href="http://www.kaldi-asr.org/doc/tree_internals.html" target="_blank" rel="external">http://www.kaldi-asr.org/doc/tree_internals.html</a></li>
+<li><a href="http://blog.sina.com.cn/s/blog_6df8f2620102v0gb.html" target="_blank" rel="external">HTK语音识别中的决策树</a></li>
+<li><a href="http://blog.csdn.net/chenhoujiangsir/article/details/51613144?from=singlemessage&amp;isappinstalled=1" target="_blank" rel="external">决策树在Kaldi中如何使用</a></li>
 </ol>
-</li>
-<li>安装numpy<br> conda install numpy</li>
-<li>安装scipy<br> conda install scipy</li>
-<li>安装pandas<br> conda install pandas</li>
-<li>安装mongoDB<ol>
-<li><a href="http://blog.csdn.net/baojianxiao/article/details/53239158" target="_blank" rel="external">http://blog.csdn.net/baojianxiao/article/details/53239158</a></li>
+<h1 id="为什么使用决策树"><a href="#为什么使用决策树" class="headerlink" title="为什么使用决策树"></a>为什么使用决策树</h1><ol>
+<li>Kaldi在语音识别时，最小识别单位是音素。在单音素(monophone)识别时，不考虑音素所处的位置，因此单音素模型不能反映音素在不同位置时不同的发音情况，因此还需要使用三音素(triphones)模型。</li>
+<li>在使用三音素时，如果但音素总数为40，则三音素最多有40x40x40种情况，但其中只有很少一部分音素在单音素和三音素中具有不同发音，因此为了更好的利用训练数据，需要对三音素模型进行决策，将三音素模型中发音相似的聚类在一起。这个工作就由使决策树来完成（<code>注意</code>:在建立决策树时，是对每个音素的每个状态都建立一个决策树，而不是只对某一个音素来建立。这里，我们以音素ih的首状态为例，详细说明决策树的建立过程。）</li>
 </ol>
-</li>
-<li>安装pyMongo<br> pip install pymongo</li>
-</ol>
+<p><img src="http://s6.sinaimg.cn/mw690/0020RyYWzy6Lt1uZVVH75&amp;690" alt=""></p>
 
       
     </div>
@@ -444,7 +451,9 @@ http:">
       
         <div class="post-tags">
           
-            <a href="/tags/树莓派/" rel="tag"># 树莓派</a>
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/Kaldi/" rel="tag"># Kaldi</a>
           
         </div>
       
@@ -453,8 +462,8 @@ http:">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/16/OpenFst学习/" rel="next" title="OpenFst学习">
-                <i class="fa fa-chevron-left"></i> OpenFst学习
+              <a href="/2017/03/02/Kaldi训练数据结构及准备/" rel="next" title="Kaldi训练数据结构及准备">
+                <i class="fa fa-chevron-left"></i> Kaldi训练数据结构及准备
               </a>
             
           </div>
@@ -463,8 +472,8 @@ http:">
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/02/17/语言模型与声学模型/" rel="prev" title="语言模型与声学模型">
-                语言模型与声学模型 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/03/13/GMM-HMM/" rel="prev" title="GMM-HMM">
+                GMM-HMM <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -492,8 +501,8 @@ http:">
   <div class="comments" id="comments">
     
       <!-- 多说评论框 start -->
-      <div class="ds-thread" data-thread-key="2017/02/16/树莓派配置Python科学计算环境/"
-           data-title="树莓派配置Python科学计算环境" data-url="http://firechecking.github.io/2017/02/16/树莓派配置Python科学计算环境/">
+      <div class="ds-thread" data-thread-key="2017/03/13/Kaldi中的决策树/"
+           data-title="Kaldi中的决策树" data-url="http://firechecking.github.io/2017/03/13/Kaldi中的决策树/">
       </div>
       <!-- 多说评论框 end -->
       <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
@@ -531,8 +540,17 @@ http:">
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -602,6 +620,22 @@ http:">
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">1.</span> <span class="nav-text">参考链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用决策树"><span class="nav-number">2.</span> <span class="nav-text">为什么使用决策树</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
