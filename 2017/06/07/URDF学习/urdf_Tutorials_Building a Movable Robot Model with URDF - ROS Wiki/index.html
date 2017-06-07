@@ -1,0 +1,1203 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="var _gaq = _gaq || [];
+  _gaq.push([&apos;_setAccount&apos;, &apos;UA-17821189-2&apos;]);
+  _gaq.push([&apos;_setDomainName&apos;, &apos;wiki.ros.org&apos;]);
+  _gaq.push([&apos;_trackPageview&apos;]);">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Firechecking">
+<meta property="og:url" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/index.html">
+<meta property="og:site_name" content="Firechecking">
+<meta property="og:description" content="var _gaq = _gaq || [];
+  _gaq.push([&apos;_setAccount&apos;, &apos;UA-17821189-2&apos;]);
+  _gaq.push([&apos;_setDomainName&apos;, &apos;wiki.ros.org&apos;]);
+  _gaq.push([&apos;_trackPageview&apos;]);">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/ros_org.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_left.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_documentation.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_spacer.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_browse_software.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_spacer.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_news.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_spacer.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_download.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_right.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/idea.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/flexible.png">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/brought_by_horiz.png">
+<meta property="og:updated_time" content="2017-06-07T12:26:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Firechecking">
+<meta name="twitter:description" content="var _gaq = _gaq || [];
+  _gaq.push([&apos;_setAccount&apos;, &apos;UA-17821189-2&apos;]);
+  _gaq.push([&apos;_setDomainName&apos;, &apos;wiki.ros.org&apos;]);
+  _gaq.push([&apos;_trackPageview&apos;]);">
+<meta name="twitter:image" content="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/ros_org.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/"/>
+
+
+
+
+
+  <title>  | Firechecking </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Firechecking</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="ZZZ">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Firechecking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-07T20:26:24+08:00">
+                2017-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+          
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_page_pv">
+          总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0087)http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="google-site-verification" content="CjkdY6BqKWAVmQ78_iSq6J7ZZ9AoL7-CjFVBYGg9FU4">
+<link rel="shortcut icon" href="http://wiki.ros.org/custom/favicon.ico" type="image/ico">
+<link rel="stylesheet" href="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/bootstrap.min.css">
+<script type="text/javascript" src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/4c8610d177"></script><script src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/nr-1026.min.js"></script><script type="text/javascript" async src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/ga.js"></script><script src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/jquery-1.11.0.min.js"></script>
+<script src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/bootstrap.min.js"></script>
+<script type="text/javascript" src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/sorttable.js"></script>
+<script type="text/javascript" src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/jquery.min.js"></script>                         
+<script type="text/javascript" src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/seesaw.js"></script> 
+<script type="text/javascript" src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/rosversion.js"></script> 
+<!--script type="text/javascript" src="/custom/libraries/RGraph.common.core.js" ></script Used for metrics only, should be conditional, not at the top-->
+<!--script type="text/javascript" src="/custom/libraries/RGraph.bar.js" ></script same as above -->
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-17821189-2']);
+  _gaq.push(['_setDomainName', 'wiki.ros.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<script type="text/javascript">window.NREUM||(NREUM={}),__nr_require=function(e,n,t){function r(t){if(!n[t]){var o=n[t]={exports:{}};e[t][0].call(o.exports,function(n){var o=e[t][1][n];return r(o||n)},o,o.exports)}return n[t].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<t.length;o++)r(t[o]);return r}({1:[function(e,n,t){function r(){}function o(e,n,t){return function(){return i(e,[c.now()].concat(u(arguments)),n?null:this,t),n?void 0:this}}var i=e("handle"),a=e(2),u=e(3),f=e("ee").get("tracer"),c=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var p=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],d="api-",l=d+"ixn-";a(p,function(e,n){s[n]=o(d+n,!0,"api")}),s.addPageAction=o(d+"addPageAction",!0),s.setCurrentRouteName=o(d+"routeName",!0),n.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,n){var t={},r=this,o="function"==typeof n;return i(l+"tracer",[c.now(),e,t],r),function(){if(f.emit((o?"":"no-")+"fn-start",[c.now(),r,o],t),o)try{return n.apply(this,arguments)}finally{f.emit("fn-end",[c.now()],t)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,n){m[n]=o(l+n)}),newrelic.noticeError=function(e){"string"==typeof e&&(e=new Error(e)),i("err",[e,c.now()])}},{}],2:[function(e,n,t){function r(e,n){var t=[],r="",i=0;for(r in e)o.call(e,r)&&(t[i]=n(r,e[r]),i+=1);return t}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],3:[function(e,n,t){function r(e,n,t){n||(n=0),"undefined"==typeof t&&(t=e?e.length:0);for(var r=-1,o=t-n||0,i=Array(o<0?0:o);++r<o;)i[r]=e[n+r];return i}n.exports=r},{}],4:[function(e,n,t){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,n,t){function r(){}function o(e){function n(e){return e&&e instanceof r?e:e?f(e,u,i):i()}function t(t,r,o,i){if(!d.aborted||i){e&&e(t,r,o);for(var a=n(o),u=m(t),f=u.length,c=0;c<f;c++)u[c].apply(a,r);var p=s[y[t]];return p&&p.push([b,t,r,a]),a}}function l(e,n){v[e]=m(e).concat(n)}function m(e){return v[e]||[]}function w(e){return p[e]=p[e]||o(t)}function g(e,n){c(e,function(e,t){n=n||"feature",y[t]=n,n in s||(s[n]=[])})}var v={},y={},b={on:l,emit:t,get:w,listeners:m,context:n,buffer:g,abort:a,aborted:!1};return b}function i(){return new r}function a(){(s.api||s.feature)&&(d.aborted=!0,s=d.backlog={})}var u="nr@context",f=e("gos"),c=e(2),s={},p={},d=n.exports=o();d.backlog=s},{}],gos:[function(e,n,t){function r(e,n,t){if(o.call(e,n))return e[n];var r=t();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return e[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(e,n,t){function r(e,n,t,r){o.buffer([e],r),o.emit(e,n,t)}var o=e("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(e,n,t){function r(e){var n=typeof e;return!e||"object"!==n&&"function"!==n?-1:e===window?0:a(e,i,function(){return o++})}var o=1,i="nr@id",a=e("gos");n.exports=r},{}],loader:[function(e,n,t){function r(){if(!x++){var e=h.info=NREUM.info,n=d.getElementsByTagName("script")[0];if(setTimeout(s.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&n))return s.abort();c(y,function(n,t){e[n]||(e[n]=t)}),f("mark",["onload",a()+h.offset],null,"api");var t=d.createElement("script");t.src="https://"+e.agent,n.parentNode.insertBefore(t,n)}}function o(){"complete"===d.readyState&&i()}function i(){f("mark",["domContent",a()+h.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(u=Math.max((new Date).getTime(),u))-h.offset}var u=(new Date).getTime(),f=e("handle"),c=e(2),s=e("ee"),p=window,d=p.document,l="addEventListener",m="attachEvent",w=p.XMLHttpRequest,g=w&&w.prototype;NREUM.o={ST:setTimeout,CT:clearTimeout,XHR:w,REQ:p.Request,EV:p.Event,PR:p.Promise,MO:p.MutationObserver};var v=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1026.min.js"},b=w&&g&&g[l]&&!/CriOS/.test(navigator.userAgent),h=n.exports={offset:u,now:a,origin:v,features:{},xhrWrappable:b};e(1),d[l]?(d[l]("DOMContentLoaded",i,!1),p[l]("load",r,!1)):(d[m]("onreadystatechange",o),p[m]("onload",r)),f("mark",["firstbyte",u],null,"api");var x=0,E=e(4)},{}]},{},["loader"]);</script><script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","queueTime":0,"licenseKey":"4c8610d177","agent":"","transactionName":"NFZaMEVUV0ZVBkBeCQ0cbRZeGkxHUAMbHQ==","applicationID":"3371695","errorBeacon":"bam.nr-data.net","applicationTime":253}</script>
+<meta name="robots" content="index,nofollow">
+
+<title>urdf/Tutorials/Building a Movable Robot Model with URDF - ROS Wiki</title>
+<script type="text/javascript" src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/common.js"></script>
+
+<script type="text/javascript">
+<!--
+var search_hint = "搜索";
+//-->
+</script>
+
+
+<link rel="stylesheet" type="text/css" charset="utf-8" media="all" href="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/common.css">
+<link rel="stylesheet" type="text/css" charset="utf-8" media="screen" href="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/screen.css">
+<link rel="stylesheet" type="text/css" charset="utf-8" media="print" href="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/print.css">
+<link rel="stylesheet" type="text/css" charset="utf-8" media="projection" href="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/projection.css">
+
+<!-- css only for MS IE6/IE7 browsers -->
+<!--[if lt IE 8]>
+   <link rel="stylesheet" type="text/css" charset="utf-8" media="all" href="/moin_static197/rostheme/css/msie.css">
+<![endif]-->
+
+
+
+
+<link rel="canonical" href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF">
+
+<link rel="Start" href="http://wiki.ros.org/Documentation">
+<link rel="Alternate" title="维基标记" href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF?action=raw">
+<link rel="Alternate" media="print" title="打印视图" href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF?action=print">
+<link rel="Up" href="http://wiki.ros.org/urdf/Tutorials">
+<link rel="Search" href="http://wiki.ros.org/FindPage">
+<link rel="Index" href="http://wiki.ros.org/TitleIndex">
+<link rel="Glossary" href="http://wiki.ros.org/WordIndex">
+<link rel="Help" href="http://wiki.ros.org/HelpOnFormatting">
+</head>
+
+<body lang="zh" dir="ltr">
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-5950817-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<script type="text/javascript">
+<!--// Initialize search form
+var f = document.getElementById('searchform');
+if(f) f.getElementsByTagName('label')[0].style.display = 'none';
+var e = document.getElementById('searchinput');
+if(e) {
+  searchChange(e);
+  searchBlur(e);
+}
+
+function handleSubmit() {
+  var f = document.getElementById('searchform');
+  var t = document.getElementById('searchinput');
+  var r = document.getElementById('real_searchinput');
+  
+  //alert("handleSubmit "+ t.value);
+  if(t.value.match(/review/)) {
+    r.value = t.value;
+  } else {
+    //r.value = t.value + " -PackageReviewCategory -StackReviewCategory -M3Review -DocReview -ApiReview -HelpOn -BadContent -LocalSpellingWords";
+    r.value = t.value + " -PackageReviewCategory -StackReviewCategory -DocReview -ApiReview";
+  }
+  //return validate(f);
+}
+//-->
+</script>
+
+<div id="dpage">
+  <div id="dpage-inner">
+    <div id="header"><div id="topnav">
+
+<!-- Alert box -->
+<!-- To enable the alert box uncomment the block below. Change the alert_box_name to a new name. Then update the content below the button. -->
+<!-- Disabling alert box
+    <div class="alert alert-info alert-dismissable" style="text-align: center;">
+<script>
+jQuery(function( $ ){
+    alert_box_name = 'roswiki_roscon2016_early_registration_last_day'
+    state = localStorage.getItem(alert_box_name);
+    if (!state) {
+      localStorage.setItem(alert_box_name, 'open');
+    }
+    state = localStorage.getItem(alert_box_name);
+    if (state == 'closed') {
+        $( '#topnav .alert' ).hide();
+    }
+    $( '.close' ).click(function () {
+	console.log('in .close.click');
+        localStorage.setItem(alert_box_name, 'closed');
+        $( '#topnav .alert' ).hide();
+  });
+});
+</script>
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      Early registration for <a href="http://roscon.ros.org/2016">ROSCon 2016</a> ends today, August 26th! <br><a href="https://events.osrfoundation.org/roscon-2016-registration/">Register now</a> to get the early registration discount. And <a href="http://conradhotels.hilton.com/en/ch/groups/personalized/S/SELCICI-GROSA-20161003/index.jhtml?WT.mc_id=POG">book you discounted hotel rooms</a> at our <a href="http://roscon.ros.org/2016/#location">discounted rates</a>.
+    </div>
+ End disabling alert box -->
+<!-- End Alert box -->
+
+      <table id="topnav-table">
+        <tbody><tr>
+          <td width="300" valign="top"><a href="http://wiki.ros.org/" target="_blank" rel="external"><img border="0" src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/ros_org.png" alt="ros.org" width="238" height="51"></a></td>
+          <td width="500" valign="middle">
+            <a href="http://www.ros.org/about-ros" target="_blank" rel="external">About</a>
+            |
+            <a href="http://wiki.ros.org/Support" target="_blank" rel="external">Support</a>
+            |
+            <a href="http://discourse.ros.org/" target="_blank" rel="external">Discussion Forum</a>
+            |
+            <a href="http://status.ros.org/" target="_blank" rel="external">Service Status</a>
+            |
+            <a href="http://answers.ros.org/" target="_blank" rel="external">Q&amp;A answers.ros.org</a>
+
+<!--<a href="http://roscon.ros.org/2016/"><img align="middle" style="padding-left: 15px;" src="http://ros.org/images/roscon_wiki_header.jpg" width="133" height="65" alt="ROSCon 2016" /></a>
+-->
+
+<!-- <a href="https://events.osrfoundation.org/ros-kong-2014/"><img align="middle" style="padding-left: 15px;" src="http://ros.org/images/ros_kong_2014_badge.png" width="133" height="38" alt="roskong" /></a>
+-->
+<!--a href="https://events.osrfoundation.org/ros-kong-2014/"><img align="middle" style="padding-left: 15px;" src="http://imgur.com/eMzUJVe.png" width="133" height="38" alt="roskong" /></a-->
+          </td>
+
+          <td valign="middle" align="right">
+
+<script language="Javascript">
+
+function Searchy(theButton){
+
+theForm = theButton.form;
+newID = theForm.input.value;
+theForm.q.value = newID;
+theForm.input.value=theForm.input.value
+
+}
+</script>
+
+
+<form action="http://www.ros.org/search/index.html" id="cse">
+  <div>
+    <label>Search:</label>
+    <input type="hidden" name="cx" value="018259903093183594226:txvzw9fat6w">
+    <input type="hidden" name="cof" value="FORID:11;NB:1">
+    <input type="hidden" name="filter" value="0">
+    <input type="hidden" name="num" value="10">
+
+    <input type="hidden" name="ie" value="UTF-8">
+    <input type="text" name="input" id="input" autocomplete="on" style="width: 35%">
+    <input type="hidden" name="q" value="">
+    <input type="submit" name="sa" value="Submit" onclick="Searchy(this)">
+
+  </div>
+</form>
+
+         </td>
+      </tr>
+      <tr>
+        <td colspan="3" height="53" width="1024"><nobr><img src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_left.png" width="17" height="53" alt=""><a href="http://wiki.ros.org/" target="_blank" rel="external"><img border="0" src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_documentation.png" width="237" height="53" alt="Documentation"></a><img src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_spacer.png" width="69" height="53"><a href="http://www.ros.org/browse/" target="_blank" rel="external"><img border="0" src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_browse_software.png" width="268" height="53" alt="Browse Software"></a><img src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_spacer.png" width="69" height="53"><a href="http://www.ros.org/news" target="_blank" rel="external"><img border="0" src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_news.png" width="84" height="53" alt="News"></a><img src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_spacer.png" width="69" height="53"><a href="http://wiki.ros.org/ROS/Installation" target="_blank" rel="external"><img border="0" src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_download.png" width="151" height="53" alt="Download"></a><img src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/menu_right.png" width="60" height="53"></nobr></td>
+
+      </tr>
+    </tbody></table> <!-- topnav-table -->
+
+    </div> <!-- /#topav -->
+  </div> <!-- /#header -->
+
+
+<div id="header2">
+
+<ul id="pagelocation">
+<li><a href="http://wiki.ros.org/urdf" target="_blank" rel="external">urdf</a></li><li><a href="http://wiki.ros.org/urdf/Tutorials" target="_blank" rel="external">Tutorials</a></li><li><a class="backlink" href="http://wiki.ros.org/action/fullsearch/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF?action=fullsearch&amp;context=180&amp;value=linkto%3A%22urdf%2FTutorials%2FBuilding+a+Movable+Robot+Model+with+URDF%22" rel="external" title="点击对这个标题进行全文检索" target="_blank">Building a Movable Robot Model with URDF</a></li>
+</ul>
+
+<div id="locationline">
+</div>
+</div>
+
+<div id="sidebar">
+<div class="sidepanel">
+<h1>维基</h1>
+
+<ul id="navibar">
+<li class="wikilink"><a href="http://wiki.ros.org/Distributions" target="_blank" rel="external">Distributions</a></li><li class="wikilink"><a href="http://wiki.ros.org/ROS/Installation" target="_blank" rel="external">ROS/Installation</a></li><li class="wikilink"><a href="http://wiki.ros.org/ROS/Tutorials" target="_blank" rel="external">ROS/Tutorials</a></li><li class="wikilink"><a href="http://wiki.ros.org/RecentChanges" target="_blank" rel="external">RecentChanges</a></li><li class="current"><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF" target="_blank" rel="external">Building a ...l with URDF</a></li>
+</ul>
+
+</div>
+<div class="sidepanel">
+<h1>网页</h1>
+<ul class="editbar"><li><span class="disabled">只读网页</span></li><li class="toggleCommentsButton" style="display:none;"><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#" class="nbcomment" onclick="toggleComments();return false;" target="_blank" rel="external">注释</a></li><li><a class="nbinfo" href="http://wiki.ros.org/action/info/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF?action=info" rel="external" target="_blank">信息</a></li><li><a class="nbattachments" href="http://wiki.ros.org/action/AttachFile/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF?action=AttachFile" rel="external" target="_blank">附件</a></li><li>
+<form class="actionsmenu" method="GET" action="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF">
+<div>
+    
+    <select name="action" onchange="if ((this.selectedIndex != 0) &amp;&amp;
+                      (this.options[this.selectedIndex].disabled == false)) {
+                this.form.submit();
+            }
+            this.selectedIndex = 0;">
+        <option value="show">更多操作：</option><option value="raw">源码</option>
+<option value="print">打印视图</option>
+<option value="RenderAsDocbook">输出Docbook格式</option>
+<option value="show" disabled class="disabled">删除缓存</option>
+<option value="show" disabled class="disabled">------------------------</option>
+<option value="SpellCheck">拼写检查</option>
+<option value="LikePages">相似网页</option>
+<option value="LocalSiteMap">本站地图</option>
+<option value="show" disabled class="disabled">------------------------</option>
+<option value="RenamePage" disabled class="disabled">改名</option>
+<option value="CopyPage">复制网页</option>
+<option value="DeletePage" disabled class="disabled">删除</option>
+<option value="show" disabled class="disabled">------------------------</option>
+<option value="MyPages">我的网页</option>
+<option value="show" disabled class="disabled">订阅</option>
+<option value="show" disabled class="disabled">------------------------</option>
+<option value="show" disabled class="disabled">删除垃圾广告</option>
+<option value="show" disabled class="disabled">恢复成此版本</option>
+<option value="PackagePages">网页打包</option>
+<option value="SyncPages">同步网页</option>
+<option value="show" disabled class="disabled">------------------------</option>
+<option value="CreatePdfDocument">CreatePdfDocument</option>
+<option value="Load">加载</option>
+<option value="RawFile">RawFile</option>
+<option value="Save">保存</option>
+<option value="SlideShow">SlideShow</option>
+    </select>
+    
+    
+</div>
+<script type="text/javascript">
+<!--// Init menu
+actionsMenuInit('更多操作：');
+//-->
+</script>
+</form>
+</li></ul>
+
+</div>
+<div class="sidepanel">
+<h1>用户</h1>
+<ul id="username"><li><a href="http://wiki.ros.org/action/login/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF?action=login" id="login" rel="external" target="_blank">登录</a></li></ul>
+</div>
+</div>
+
+<div id="page" lang="en" dir="ltr">
+
+<div dir="ltr" id="content" lang="en"><span class="anchor" id="top"></span>
+<span class="anchor" id="line-1"></span><span class="anchor" id="line-2"></span><span class="anchor" id="line-3"></span><span class="anchor" id="line-4"></span><span class="anchor" id="line-5"></span><span class="anchor" id="line-6"></span><span class="anchor" id="line-7"></span><span class="anchor" id="line-8"></span><span class="anchor" id="line-9"></span><p class="line867"><span class="anchor" id="line-1-1"></span><span class="anchor" id="line-2-1"></span></p><div><table><tbody><tr>  <td style="background-color: #cce0ff"><strong>Note:</strong> This tutorial assumes that you have completed the previous tutorials:   <a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Visual%20Robot%20Model%20with%20URDF%20from%20Scratch" target="_blank" rel="external">Building a Visual Robot Model with URDF</a>. </td>
+</tr>
+</tbody></table></div><span class="anchor" id="line-3-1"></span><span class="anchor" id="line-4-1"></span><span class="anchor" id="line-5-1"></span><span class="anchor" id="line-6-1"></span><div><table><tbody><tr>  <td style="background-color: #bbceee"> <img alt="(!)" height="15" src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/idea.png" title="(!)" width="15"> Please ask about problems and questions regarding this tutorial on <a class="http" href="http://answers.ros.org/" target="_blank" rel="external">answers.ros.org</a>. Don't forget to include in your question the link to this page, the versions of your OS &amp; ROS, and also add appropriate tags.</td>
+</tr>
+</tbody></table></div><span class="anchor" id="line-7-1"></span><span class="anchor" id="line-8-1"></span><span class="anchor" id="line-9-1"></span>
+<h1 id="Building_a_Movable_Robot_Model_with_URDF">Building a Movable Robot Model with URDF</h1>
+<span class="anchor" id="line-10"></span><strong>Description:</strong> Learn how to define movable joints in URDF<br>
+<br>
+ <span class="anchor" id="line-11"></span><span class="anchor" id="line-12"></span><span class="anchor" id="line-13"></span><strong>Keywords:</strong> URDF, Joints<br>
+<br>
+ <span class="anchor" id="line-14"></span><span class="anchor" id="line-15"></span><span class="anchor" id="line-16"></span><strong>Tutorial Level:</strong> BEGINNER<br>
+ <br>
+ <span class="anchor" id="line-17"></span><span class="anchor" id="line-18"></span><strong>Next Tutorial:</strong>   <a href="http://wiki.ros.org/urdf/Tutorials/Adding%20Physical%20and%20Collision%20Properties%20to%20a%20URDF%20Model" target="_blank" rel="external">Adding Physical and Collision Properties to the Model</a><br>
+ <br>
+  <span class="anchor" id="line-19"></span><p class="line874"> <span class="anchor" id="line-10-1"></span><span class="anchor" id="line-11-1"></span></p><p class="line862">In this tutorial, we’re going to revise the R2D2 model we made in the <a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Visual%20Robot%20Model%20with%20URDF%20from%20Scratch" target="_blank" rel="external">previous tutorial</a> so that it has movable joints. In the previous model, all of the joints were fixed. Now we’ll explore three other important types of joints: continuous, revolute and prismatic.  <span class="anchor" id="line-12-1"></span><span class="anchor" id="line-13-1"></span></p><p class="line862">Make sure you have installed all prerequisites before continuing. See the <a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Visual%20Robot%20Model%20with%20URDF%20from%20Scratch" target="_blank" rel="external">previous tutorial</a> for information on what is required. <span class="anchor" id="line-14-1"></span><span class="anchor" id="line-15-1"></span></p><p class="line862">Again, all of the robot models mentioned in this tutorial can be found in the <a href="http://wiki.ros.org/urdf_tutorial" target="_blank" rel="external">urdf_tutorial</a> package.  <span class="anchor" id="line-16-1"></span><span class="anchor" id="line-17-1"></span><span class="anchor" id="line-18-1"></span></p><p class="line867"></p><div class="table-of-contents"><p class="table-of-contents-heading">目录</p><ol><li>
+<a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#The_Head" target="_blank" rel="external">The Head</a></li><li>
+<a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#The_Gripper" target="_blank" rel="external">The Gripper</a></li><li>
+<a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#The_Gripper_Arm" target="_blank" rel="external">The Gripper Arm</a></li><li>
+<a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#Other_Types_of_Joints" target="_blank" rel="external">Other Types of Joints</a></li><li>
+<a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#Specifying_the_Pose" target="_blank" rel="external">Specifying the Pose</a></li><li>
+<a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#Next_steps" target="_blank" rel="external">Next steps</a></li></ol></div><p class="line874"> <span class="anchor" id="line-19-1"></span><span class="anchor" id="line-20"></span></p><p class="line867"><a class="https" href="https://github.com/ros/urdf_tutorial/tree/master/urdf_tutorial/urdf/06-flexible.urdf" target="_blank" rel="external">Here is the new urdf</a> with flexible joints. You can compare it to the previous version to see everything that has changed, but we’re just going to focus on three example joints.  <span class="anchor" id="line-21"></span><span class="anchor" id="line-22"></span></p><p class="line874">To visualize and control this model, run the same command as the last tutorial:  <span class="anchor" id="line-23"></span><tt>roslaunch&nbsp;urdf_tutorial&nbsp;display.launch&nbsp;model:=urdf/06-flexible.urdf</tt> <span class="anchor" id="line-24"></span>However now this will also pop up a GUI that allows you to control the values of all the non-fixed joints. Play with the model some and see how it moves. Then, we can take a look at how we accomplished this.  <span class="anchor" id="line-25"></span><span class="anchor" id="line-26"></span></p><p class="line867"><img alt="Screenshot of Flexible Model" class="external_image" src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/flexible.png" title="Screenshot of Flexible Model" width="800"> <span class="anchor" id="line-27"></span><span class="anchor" id="line-28"></span></p><p class="line867">
+</p><h2 id="The_Head">The Head</h2>
+<span class="anchor" id="line-29"></span><p class="line867"><span class="anchor" id="line-30"></span><span class="anchor" id="line-31"></span><span class="anchor" id="line-32"></span><span class="anchor" id="line-33"></span><span class="anchor" id="line-34"></span><span class="anchor" id="line-35"></span><span class="anchor" id="line-36"></span><span class="anchor" id="line-1-2"></span></p><div class="highlight xml"><div class="codearea" dir="ltr" lang="en">
+<script type="text/javascript">
+function isnumbered(obj) {
+  return obj.childNodes.length && obj.firstChild.childNodes.length && obj.firstChild.firstChild.className == 'LineNumber';
+}
+function nformat(num,chrs,add) {
+  var nlen = Math.max(0,chrs-(''+num).length), res = '';
+  while (nlen>0) { res += ' '; nlen-- }
+  return res+num+add;
+}
+function addnumber(did, nstart, nstep) {
+  var c = document.getElementById(did), l = c.firstChild, n = 1;
+  if (!isnumbered(c)) {
+    if (typeof nstart == 'undefined') nstart = 1;
+    if (typeof nstep  == 'undefined') nstep = 1;
+    var n = nstart;
+    while (l != null) {
+      if (l.tagName == 'SPAN') {
+        var s = document.createElement('SPAN');
+        var a = document.createElement('A');
+        s.className = 'LineNumber';
+        a.appendChild(document.createTextNode(nformat(n,4,'')));
+        a.href = '#' + did + '_' + n;
+        s.appendChild(a);
+        s.appendChild(document.createTextNode(' '));
+        n += nstep;
+        if (l.childNodes.length) {
+          l.insertBefore(s, l.firstChild);
+        }
+        else {
+          l.appendChild(s);
+        }
+      }
+      l = l.nextSibling;
+    }
+  }
+  return false;
+}
+function remnumber(did) {
+  var c = document.getElementById(did), l = c.firstChild;
+  if (isnumbered(c)) {
+    while (l != null) {
+      if (l.tagName == 'SPAN' && l.firstChild.className == 'LineNumber') l.removeChild(l.firstChild);
+      l = l.nextSibling;
+    }
+  }
+  return false;
+}
+function togglenumber(did, nstart, nstep) {
+  var c = document.getElementById(did);
+  if (isnumbered(c)) {
+    remnumber(did);
+  } else {
+    addnumber(did,nstart,nstep);
+  }
+  return false;
+}
+</script>
+
+<script type="text/javascript">
+document.write('<a href="#" onclick="return togglenumber(\'CA-cec572e6f2f3585a5e182ea8be7d4056b6e33c88\', 1, 1);" \
+                class="codenumbers">切换行号显示<\/a>');
+</script><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#" onclick="return togglenumber(&#39;CA-cec572e6f2f3585a5e182ea8be7d4056b6e33c88&#39;, 1, 1);" class="codenumbers" target="_blank" rel="external">切换行号显示</a>
+<pre dir="ltr" id="CA-cec572e6f2f3585a5e182ea8be7d4056b6e33c88" lang="en"><span class="line"><span class="LineAnchor" id="CA-cec572e6f2f3585a5e182ea8be7d4056b6e33c88_1"></span><span class="anchor" id="line-1-3"></span>  <span class="ID">&lt;joint</span> <span class="ID">name=</span><span class="String">"head_swivel"</span> <span class="ID">type=</span><span class="String">"continuous"</span><span class="ID">&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-cec572e6f2f3585a5e182ea8be7d4056b6e33c88_2"></span><span class="anchor" id="line-2-2"></span>    <span class="ID">&lt;parent</span> <span class="ID">link=</span><span class="String">"base_link"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-cec572e6f2f3585a5e182ea8be7d4056b6e33c88_3"></span><span class="anchor" id="line-3-2"></span>    <span class="ID">&lt;child</span> <span class="ID">link=</span><span class="String">"head"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-cec572e6f2f3585a5e182ea8be7d4056b6e33c88_4"></span><span class="anchor" id="line-4-2"></span>    <span class="ID">&lt;axis</span> <span class="ID">xyz=</span><span class="String">"0 0 1"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-cec572e6f2f3585a5e182ea8be7d4056b6e33c88_5"></span><span class="anchor" id="line-5-2"></span>    <span class="ID">&lt;origin</span> <span class="ID">xyz=</span><span class="String">"0 0 0.3"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-cec572e6f2f3585a5e182ea8be7d4056b6e33c88_6"></span><span class="anchor" id="line-6-2"></span>  <span class="ID">&lt;/joint&gt;</span></span>
+</pre></div></div><span class="anchor" id="line-37"></span><p class="line874">The connection between the body and the head is a continuous joint, meaning that it can take on any angle from negative infinity to positive infinity. The wheels are also modeled like this, so that they can roll in both directions forever.  <span class="anchor" id="line-38"></span><span class="anchor" id="line-39"></span></p><p class="line874">The only additional information we have to add is the axis of rotation, here specified by an xyz triplet, which specifies a vector around which the head will rotate. Since we want it to go around the z axis, we specify the vector "0 0 1". <span class="anchor" id="line-40"></span><span class="anchor" id="line-41"></span></p><p class="line867">
+</p><h2 id="The_Gripper">The Gripper</h2>
+<span class="anchor" id="line-42"></span><p class="line867"><span class="anchor" id="line-43"></span><span class="anchor" id="line-44"></span><span class="anchor" id="line-45"></span><span class="anchor" id="line-46"></span><span class="anchor" id="line-47"></span><span class="anchor" id="line-48"></span><span class="anchor" id="line-49"></span><span class="anchor" id="line-50"></span><span class="anchor" id="line-1-4"></span></p><div class="highlight xml"><div class="codearea" dir="ltr" lang="en">
+<script type="text/javascript">
+document.write('<a href="#" onclick="return togglenumber(\'CA-29483f12619d4e25ef99890d88cafbef5d61753c\', 1, 1);" \
+                class="codenumbers">切换行号显示<\/a>');
+</script><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#" onclick="return togglenumber(&#39;CA-29483f12619d4e25ef99890d88cafbef5d61753c&#39;, 1, 1);" class="codenumbers" target="_blank" rel="external">切换行号显示</a>
+<pre dir="ltr" id="CA-29483f12619d4e25ef99890d88cafbef5d61753c" lang="en"><span class="line"><span class="LineAnchor" id="CA-29483f12619d4e25ef99890d88cafbef5d61753c_1"></span><span class="anchor" id="line-1-5"></span>  <span class="ID">&lt;joint</span> <span class="ID">name=</span><span class="String">"left_gripper_joint"</span> <span class="ID">type=</span><span class="String">"revolute"</span><span class="ID">&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-29483f12619d4e25ef99890d88cafbef5d61753c_2"></span><span class="anchor" id="line-2-3"></span>    <span class="ID">&lt;axis</span> <span class="ID">xyz=</span><span class="String">"0 0 1"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-29483f12619d4e25ef99890d88cafbef5d61753c_3"></span><span class="anchor" id="line-3-3"></span>    <span class="ID">&lt;limit</span> <span class="ID">effort=</span><span class="String">"1000.0"</span> <span class="ID">lower=</span><span class="String">"0.0"</span> <span class="ID">upper=</span><span class="String">"0.548"</span> <span class="ID">velocity=</span><span class="String">"0.5"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-29483f12619d4e25ef99890d88cafbef5d61753c_4"></span><span class="anchor" id="line-4-3"></span>    <span class="ID">&lt;origin</span> <span class="ID">rpy=</span><span class="String">"0 0 0"</span> <span class="ID">xyz=</span><span class="String">"0.2 0.01 0"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-29483f12619d4e25ef99890d88cafbef5d61753c_5"></span><span class="anchor" id="line-5-3"></span>    <span class="ID">&lt;parent</span> <span class="ID">link=</span><span class="String">"gripper_pole"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-29483f12619d4e25ef99890d88cafbef5d61753c_6"></span><span class="anchor" id="line-6-3"></span>    <span class="ID">&lt;child</span> <span class="ID">link=</span><span class="String">"left_gripper"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineAnchor" id="CA-29483f12619d4e25ef99890d88cafbef5d61753c_7"></span><span class="anchor" id="line-7-2"></span>  <span class="ID">&lt;/joint&gt;</span></span>
+</pre></div></div><span class="anchor" id="line-51"></span><span class="anchor" id="line-52"></span><p class="line874">Both the right and the left gripper joints are modeled as revolute joints. This means that they rotate in the same way that the continuous joints do, but they have strict limits. Hence, we must include the limit tag specifying the upper and lower limits of the joint (in radians). We also must specify a maximum velocity and effort for this joint but the actual values don't matter for our purposes here. <span class="anchor" id="line-53"></span><span class="anchor" id="line-54"></span></p><p class="line867">
+</p><h2 id="The_Gripper_Arm">The Gripper Arm</h2>
+<span class="anchor" id="line-55"></span><p class="line867"><span class="anchor" id="line-56"></span><span class="anchor" id="line-57"></span><span class="anchor" id="line-58"></span><span class="anchor" id="line-59"></span><span class="anchor" id="line-60"></span><span class="anchor" id="line-61"></span><span class="anchor" id="line-62"></span><span class="anchor" id="line-1-6"></span></p><div class="highlight xml"><div class="codearea" dir="ltr" lang="en">
+<script type="text/javascript">
+document.write('<a href="#" onclick="return togglenumber(\'CA-0cea110fec1cf93da4ea30d6c93880fbc642414a\', 1, 1);" \
+                class="codenumbers">切换行号显示<\/a>');
+</script><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#" onclick="return togglenumber(&#39;CA-0cea110fec1cf93da4ea30d6c93880fbc642414a&#39;, 1, 1);" class="codenumbers" target="_blank" rel="external">切换行号显示</a>
+<pre dir="ltr" id="CA-0cea110fec1cf93da4ea30d6c93880fbc642414a" lang="en"><span class="line"><span class="LineNumber"><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_1" target="_blank" rel="external">   1</a> </span><span class="LineAnchor" id="CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_1"></span><span class="anchor" id="line-1-7"></span>  <span class="ID">&lt;joint</span> <span class="ID">name=</span><span class="String">"gripper_extension"</span> <span class="ID">type=</span><span class="String">"prismatic"</span><span class="ID">&gt;</span></span>
+<span class="line"><span class="LineNumber"><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_2" target="_blank" rel="external">   2</a> </span><span class="LineAnchor" id="CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_2"></span><span class="anchor" id="line-2-4"></span>    <span class="ID">&lt;parent</span> <span class="ID">link=</span><span class="String">"base_link"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineNumber"><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_3" target="_blank" rel="external">   3</a> </span><span class="LineAnchor" id="CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_3"></span><span class="anchor" id="line-3-4"></span>    <span class="ID">&lt;child</span> <span class="ID">link=</span><span class="String">"gripper_pole"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineNumber"><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_4" target="_blank" rel="external">   4</a> </span><span class="LineAnchor" id="CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_4"></span><span class="anchor" id="line-4-4"></span>    <span class="ID">&lt;limit</span> <span class="ID">effort=</span><span class="String">"1000.0"</span> <span class="ID">lower=</span><span class="String">"-0.38"</span> <span class="ID">upper=</span><span class="String">"0"</span> <span class="ID">velocity=</span><span class="String">"0.5"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineNumber"><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_5" target="_blank" rel="external">   5</a> </span><span class="LineAnchor" id="CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_5"></span><span class="anchor" id="line-5-4"></span>    <span class="ID">&lt;origin</span> <span class="ID">rpy=</span><span class="String">"0 0 0"</span> <span class="ID">xyz=</span><span class="String">"0.19 0 0.2"</span><span class="ID">/&gt;</span></span>
+<span class="line"><span class="LineNumber"><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF#CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_6" target="_blank" rel="external">   6</a> </span><span class="LineAnchor" id="CA-0cea110fec1cf93da4ea30d6c93880fbc642414a_6"></span><span class="anchor" id="line-6-4"></span>  <span class="ID">&lt;/joint&gt;</span></span>
+</pre></div></div><span class="anchor" id="line-63"></span><span class="anchor" id="line-64"></span><p class="line874">The gripper arm is a different kind of joint...namely a prismatic joint. This means that it moves along an axis, not around it. This translational movement is what allows our robot model to extend and retract its gripper arm.  <span class="anchor" id="line-65"></span><span class="anchor" id="line-66"></span></p><p class="line874">The limits of the prismatic arm are specified in the same way as a revolute joint, except that the units are meters, not radians.  <span class="anchor" id="line-67"></span><span class="anchor" id="line-68"></span></p><p class="line867">
+</p><h2 id="Other_Types_of_Joints">Other Types of Joints</h2>
+<span class="anchor" id="line-69"></span><p class="line874">There are two other kinds of joints that move around in space. Whereas the prismatic joint can only move along one dimension, a planar joint can move around in a plane, or two dimensions. Furthermore, a floating joint is unconstrained, and can move around in any of the three dimensions. These joints cannot be specified by just one number, and therefore aren’t included in this tutorial.  <span class="anchor" id="line-70"></span><span class="anchor" id="line-71"></span></p><p class="line867">
+</p><h2 id="Specifying_the_Pose">Specifying the Pose</h2>
+<span class="anchor" id="line-72"></span><p class="line862">As you move the sliders around in the GUI, the model moves in Rviz. How is this done? First the <a href="http://wiki.ros.org/joint_state_publisher" target="_blank" rel="external">GUI</a> parses the URDF and finds all the non-fixed joints and their limits. Then, it uses the values of the sliders to publish <a href="http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html" target="_blank" rel="external">sensor_msgs/JointState</a> messages. Those are then used by <a href="http://wiki.ros.org/robot_state_publisher" target="_blank" rel="external">robot_state_publisher</a> to calculate all of transforms between the different parts. The resulting transform tree is then used to display all of the shapes in Rviz.  <span class="anchor" id="line-73"></span><span class="anchor" id="line-74"></span></p><p class="line867">
+</p><h2 id="Next_steps">Next steps</h2>
+<span class="anchor" id="line-75"></span><p class="line862">Now that you have a visibly functional model, you can <a href="http://wiki.ros.org/urdf/Tutorials/Adding%20Physical%20and%20Collision%20Properties%20to%20a%20URDF%20Model" target="_blank" rel="external">add in some physical properties</a>, or <a href="http://wiki.ros.org/urdf/Tutorials/Using%20Xacro%20to%20Clean%20Up%20a%20URDF%20File" target="_blank" rel="external">start using xacro to simplify your code</a>. <span class="anchor" id="line-76"></span><span class="anchor" id="line-77"></span></p><p class="line867"><span class="anchor" id="line-78"></span></p><p class="line867"><span class="anchor" id="line-79"></span></p><p class="line867"><span class="anchor" id="line-80"></span></p><p class="line867"><span class="anchor" id="line-81"></span><span class="anchor" id="bottom"></span></p></div></div>
+<div id="pagebottom"></div>
+</div>
+
+<p id="pageinfo" class="info" lang="zh" dir="ltr">Wiki: urdf/Tutorials/Building a Movable Robot Model with URDF  (2017-05-30 22:03:51由<span title="David Lu!! @ 50-225-159-98-static.hfc.comcastbusiness.net[50.225.159.98]"><a class="mailto" href="mailto:davidlu@wustl.edu" title="David Lu!! @ 50-225-159-98-static.hfc.comcastbusiness.net[50.225.159.98]" target="_blank" rel="external">DavidLu</a></span>编辑)</p>
+
+
+
+
+<div style="margin-top: 9px;" class="footer">
+Except where otherwise noted, the ROS wiki is licensed under the <br><a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" rel="external">Creative Commons Attribution 3.0</a> | <a href="https://plus.google.com/113789706402978299308" rel="external" target="_blank">Find us on Google+</a>
+<hr style="margin-top: 10px;">
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+<a href="http://www.osrfoundation.org/" target="_blank" rel="external"><img style="margin-top: -1px;" src="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/./urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/brought_by_horiz.png"><p></p></a>
+  </div>
+</div>
+</div>
+
+  </div> <!-- /#dpage-inner, /#dpage -->
+
+
+
+
+
+</body><div></div></html>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/06/tf2学习/" rel="next" title="tf2学习">
+                <i class="fa fa-chevron-left"></i> tf2学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki_files/ga/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/"
+           data-title="" data-url="http://firechecking.github.io/2017/06/07/URDF学习/urdf_Tutorials_Building a Movable Robot Model with URDF - ROS Wiki/">
+      </div>
+      <!-- 多说评论框 end -->
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"firechecking"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ZZZ" />
+          <p class="site-author-name" itemprop="name">ZZZ</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baidu.com/" title="百度" target="_blank">百度</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">维基</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">网页</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Building_a_Movable_Robot_Model_with_URDF"><span class="nav-number">4.</span> <span class="nav-text">Building a Movable Robot Model with URDF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#The_Head"><span class="nav-number">4.1.</span> <span class="nav-text">The Head</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The_Gripper"><span class="nav-number">4.2.</span> <span class="nav-text">The Gripper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The_Gripper_Arm"><span class="nav-number">4.3.</span> <span class="nav-text">The Gripper Arm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Other_Types_of_Joints"><span class="nav-number">4.4.</span> <span class="nav-text">Other Types of Joints</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Specifying_the_Pose"><span class="nav-number">4.5.</span> <span class="nav-text">Specifying the Pose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Next_steps"><span class="nav-number">4.6.</span> <span class="nav-text">Next steps</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZZZ</span>
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+<span id="busuanzi_container_site_uv">本站总访问量<span id="busuanzi_value_site_uv"></span>次</span>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"firechecking"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

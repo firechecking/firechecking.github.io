@@ -96,7 +96,7 @@ http://wiki.ros.org/cn">
 http://www.ros.org/support/
 http://wiki.ros.org/
 http://wiki.ros.org/cn">
-<meta property="og:updated_time" content="2017-05-31T01:28:34.000Z">
+<meta property="og:updated_time" content="2017-06-07T10:38:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ROS使用学习">
 <meta name="twitter:description" content="参考文档
@@ -409,8 +409,22 @@ http://wiki.ros.org/cn">
 <li><a href="http://answers.ros.org/questions/ask/" target="_blank" rel="external">http://answers.ros.org/questions/ask/</a></li>
 </ol>
 <h1 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h1><h2 id="Core-ROS"><a href="#Core-ROS" class="headerlink" title="Core ROS"></a>Core ROS</h2><h3 id="安装与配置"><a href="#安装与配置" class="headerlink" title="安装与配置"></a>安装与配置</h3><ol>
-<li><a href="http://wiki.ros.org/lunar/Installation/Ubuntu" target="_blank" rel="external">Ubuntu install of ROS Lunar</a></li>
-<li>配置环境<ol>
+<li><p><a href="http://wiki.ros.org/lunar/Installation/Ubuntu" target="_blank" rel="external">Ubuntu install of ROS Lunar</a></p>
+</li>
+<li><p>安装Package</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install ros-kinetic-PACKAGE</div></pre></td></tr></table></figure>
+<ol>
+<li><p>管理ROS Package</p>
+<ol>
+<li><p><a href="http://wiki.ros.org/ROS/Tutorials/rosdep" target="_blank" rel="external">http://wiki.ros.org/ROS/Tutorials/rosdep</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rosdep install [package]</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>配置环境</p>
+<ol>
 <li>检查ROS_ROOT、ROS_PACKAGE_PATH环境变量:<code>$ printenv | grep ROS</code></li>
 <li>如果环境变量不存在，需要运行setup.bash:<code>$ source /opt/ros/lunar/setup.bash</code></li>
 </ol>
@@ -418,8 +432,7 @@ http://wiki.ros.org/cn">
 <li>创建ROS工作空间</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ mkdir -p ~/catkin_ws/src</div><div class="line">$ cd ~/catkin_ws/src</div><div class="line">$ catkin_make</div><div class="line">$ source devel/setup.bash</div><div class="line">$ echo $ROS_PACKAGE_PATH</div></pre></td></tr></table></figure>
-<ol>
-<li>ROS文件系统教程<ol>
+<h3 id="ROS文件系统教程"><a href="#ROS文件系统教程" class="headerlink" title="ROS文件系统教程"></a>ROS文件系统教程</h3><ol>
 <li>基本概览<ol>
 <li>Package：程序代码的组织单元，Package可以包含库、可执行文件、脚本</li>
 <li>Manifests(package.xml):Package的描述，用于定义package的元信息间的依赖关系（如版本、维护者、许可协议等）</li>
@@ -430,9 +443,16 @@ http://wiki.ros.org/cn">
 </ol>
 </li>
 </ol>
-</li>
+<h3 id="创建ROS-Package"><a href="#创建ROS-Package" class="headerlink" title="创建ROS Package"></a>创建ROS Package</h3><h3 id="编译ROS-Package"><a href="#编译ROS-Package" class="headerlink" title="编译ROS Package"></a>编译ROS Package</h3><h3 id="ROS节点认识"><a href="#ROS节点认识" class="headerlink" title="ROS节点认识"></a>ROS节点认识</h3><ol>
+<li>Nodes：一个节点是一个可执行程序，通过ROS与其他节点通信</li>
+<li>Messages：订阅和发布主题时，用到的ROS数据类型</li>
+<li>Topics：节点发布消息到一个主题，或订阅一个主题的消息</li>
+<li>Master：ROS名称服务（帮助节点找到彼此）</li>
+<li>rosout：ros中相当于stdout/stderr</li>
+<li>roscore：Master+rosout+参数服务器（parameter server）</li>
 </ol>
-
+<h1 id="MoveIt"><a href="#MoveIt" class="headerlink" title="MoveIt"></a>MoveIt</h1><p><a href="https://www.leiphone.com/news/201612/nxlXgriSLasNgAcX.html?viewType=weixin" target="_blank" rel="external">如何利用ROS MoveIt快速搭建机器人运动规划平台？</a></p>
+<h1 id="URDF"><a href="#URDF" class="headerlink" title="URDF"></a>URDF</h1>
       
     </div>
 
@@ -567,7 +587,7 @@ http://wiki.ros.org/cn">
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -576,7 +596,7 @@ http://wiki.ros.org/cn">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -585,7 +605,7 @@ http://wiki.ros.org/cn">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -634,7 +654,7 @@ http://wiki.ros.org/cn">
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">1.</span> <span class="nav-text">参考文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ROS-Lunar-Loggerhead"><span class="nav-number">2.1.</span> <span class="nav-text">ROS Lunar Loggerhead</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关地址"><span class="nav-number">3.</span> <span class="nav-text">相关地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Learning-ROS"><span class="nav-number">4.</span> <span class="nav-text">Learning ROS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Finding-Answers"><span class="nav-number">5.</span> <span class="nav-text">Finding Answers</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#教程"><span class="nav-number">6.</span> <span class="nav-text">教程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Core-ROS"><span class="nav-number">6.1.</span> <span class="nav-text">Core ROS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装与配置"><span class="nav-number">6.1.1.</span> <span class="nav-text">安装与配置</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">1.</span> <span class="nav-text">参考文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ROS-Lunar-Loggerhead"><span class="nav-number">2.1.</span> <span class="nav-text">ROS Lunar Loggerhead</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关地址"><span class="nav-number">3.</span> <span class="nav-text">相关地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Learning-ROS"><span class="nav-number">4.</span> <span class="nav-text">Learning ROS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Finding-Answers"><span class="nav-number">5.</span> <span class="nav-text">Finding Answers</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#教程"><span class="nav-number">6.</span> <span class="nav-text">教程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Core-ROS"><span class="nav-number">6.1.</span> <span class="nav-text">Core ROS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装与配置"><span class="nav-number">6.1.1.</span> <span class="nav-text">安装与配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS文件系统教程"><span class="nav-number">6.1.2.</span> <span class="nav-text">ROS文件系统教程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建ROS-Package"><span class="nav-number">6.1.3.</span> <span class="nav-text">创建ROS Package</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译ROS-Package"><span class="nav-number">6.1.4.</span> <span class="nav-text">编译ROS Package</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS节点认识"><span class="nav-number">6.1.5.</span> <span class="nav-text">ROS节点认识</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MoveIt"><span class="nav-number">7.</span> <span class="nav-text">MoveIt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URDF"><span class="nav-number">8.</span> <span class="nav-text">URDF</span></a></li></ol></div>
             
 
           </div>

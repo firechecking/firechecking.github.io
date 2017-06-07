@@ -1,0 +1,864 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器人,ROS,URDF," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="简介URDF（Unified Robot Description Format）是ROS中使用的一种机器人描述文件，它以HTML的形式定义一个机器人。包含的内容有：连杆、关节名称，运动学参数、动力学参数、可视化模型、碰撞检测模型等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="URDF学习">
+<meta property="og:url" content="http://firechecking.github.io/2017/06/06/URDF学习/index.html">
+<meta property="og:site_name" content="Firechecking">
+<meta property="og:description" content="简介URDF（Unified Robot Description Format）是ROS中使用的一种机器人描述文件，它以HTML的形式定义一个机器人。包含的内容有：连杆、关节名称，运动学参数、动力学参数、可视化模型、碰撞检测模型等。">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/06/URDF学习/flexible.png">
+<meta property="og:updated_time" content="2017-06-07T13:15:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="URDF学习">
+<meta name="twitter:description" content="简介URDF（Unified Robot Description Format）是ROS中使用的一种机器人描述文件，它以HTML的形式定义一个机器人。包含的内容有：连杆、关节名称，运动学参数、动力学参数、可视化模型、碰撞检测模型等。">
+<meta name="twitter:image" content="http://firechecking.github.io/2017/06/06/URDF学习/flexible.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://firechecking.github.io/2017/06/06/URDF学习/"/>
+
+
+
+
+
+  <title> URDF学习 | Firechecking </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Firechecking</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/06/06/URDF学习/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="ZZZ">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Firechecking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                URDF学习
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-06T18:13:59+08:00">
+                2017-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器人/" itemprop="url" rel="index">
+                    <span itemprop="name">机器人</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器人/ROS/" itemprop="url" rel="index">
+                    <span itemprop="name">ROS</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器人/ROS/URDF/" itemprop="url" rel="index">
+                    <span itemprop="name">URDF</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/06/URDF学习/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/06/URDF学习/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+          
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_page_pv">
+          总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>URDF（Unified Robot Description Format）是ROS中使用的一种机器人描述文件，它以HTML的形式定义一个机器人。包含的内容有：连杆、关节名称，运动学参数、动力学参数、可视化模型、碰撞检测模型等。<br><a id="more"></a></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="http://wiki.ros.org/urdf" target="_blank" rel="external">http://wiki.ros.org/urdf</a></li>
+<li><a href="http://wiki.ros.org/urdf/Tutorials" target="_blank" rel="external">http://wiki.ros.org/urdf/Tutorials</a></li>
+</ol>
+<h1 id="参考教程"><a href="#参考教程" class="headerlink" title="参考教程"></a>参考教程</h1><h2 id="TF2教程"><a href="#TF2教程" class="headerlink" title="TF2教程"></a><a href="../tf2学习/">TF2教程</a></h2><h2 id="Xacro教程"><a href="#Xacro教程" class="headerlink" title="Xacro教程"></a>Xacro教程</h2><h2 id="Gazebo教程"><a href="#Gazebo教程" class="headerlink" title="Gazebo教程"></a>Gazebo教程</h2><h1 id="URDF基础"><a href="#URDF基础" class="headerlink" title="URDF基础"></a>URDF基础</h1><h2 id="使用URDF语言创建可视的模型"><a href="#使用URDF语言创建可视的模型" class="headerlink" title="使用URDF语言创建可视的模型"></a><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Visual%20Robot%20Model%20with%20URDF%20from%20Scratch" target="_blank" rel="external">使用URDF语言创建可视的模型</a></h2><ol>
+<li>本教程使用URDF创建一个可视的模型，首先确保已经安装了Package:”joint_state_publisher”(使用rosdep安装，或使用apt-get安装urdf_tutorial)</li>
+<li>一个URDF文件中，有一个<code>&lt;robot name=&quot;&quot;&gt;</code>标签</li>
+<li>有多个<code>&lt;link name=&quot;&quot;&gt;</code>标签，表示机器人实体部件</li>
+<li>有多个<code>&lt;joint name=&quot;&quot; type=&quot;&quot;&gt;</code>标签，表示机器人实体部件的连接（关节）</li>
+<li>在URDF以树结构保存机器人模型，具有一个根link</li>
+<li><p>在rviz中查看</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ roslaunch urdf_tutorial display.launch model:=urdf/01-myfirst.urdf</div></pre></td></tr></table></figure>
+<p> 代码完成的事情包括：</p>
+<ol>
+<li>将urdf/01-myfirst.urdf文件中的urdf模型载入ros parameter server</li>
+<li>启动Node发布消息到sensor_msgs/JointState主题，以及发布transform消息</li>
+<li>启动RVIZ</li>
+</ol>
+</li>
+<li><p>示例代码(<a href="https://github.com/ros/urdf_tutorial/blob/master/urdf_tutorial/urdf/05-visual.urdf" target="_blank" rel="external">source</a>)</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</div><div class="line">&lt;robot name=&quot;visual&quot;&gt;</div><div class="line">		&lt;!-- 自定义材料属性 --&gt;</div><div class="line">		&lt;!-- 也可以自定义图片纹理属性 --&gt;</div><div class="line">    &lt;material name=&quot;blue&quot;&gt;</div><div class="line">    &lt;color rgba=&quot;0 0 0.8 1&quot; /&gt;</div><div class="line">    &lt;/material&gt;</div><div class="line">    &lt;link name=&quot;right_leg&quot;&gt;&lt;!-- link表示机器人实体部件 --&gt;</div><div class="line">        &lt;visual&gt;&lt;!-- 实体部件的视觉设置 --&gt;</div><div class="line">            &lt;geometry&gt;</div><div class="line">                &lt;cylinder length=&quot;0.6&quot; radius=&quot;0.2&quot;/&gt;&lt;!-- 长0.6m，班级0.2米的圆柱体 --&gt;</div><div class="line">            &lt;/geometry&gt;</div><div class="line">            &lt;origin rpy=&quot;0 1.57075 0&quot; xyz=&quot;0 0 -0.3&quot; /&gt;&lt;!-- 实体部件的坐标 --&gt;&lt;!--rpy:roll pitch yaw--&gt;</div><div class="line">            &lt;!-- 部件向z轴移动-0.3m,沿y轴旋转PI/2 --&gt;</div><div class="line">            &lt;material name=&quot;white&quot; /&gt;</div><div class="line">        &lt;/visual&gt;</div><div class="line">    &lt;/link&gt;</div><div class="line">    &lt;joint name=&quot;base_to_right_leg&quot; type=&quot;fixed&quot;&gt;&lt;!-- joint表示机器人实体部件的连接(关节) --&gt;</div><div class="line">    &lt;!-- joint类型可以是&quot;fixed&quot;,&quot;continuous&quot;,&quot;revolute&quot;,&quot;prismatic&quot; --&gt;</div><div class="line">        &lt;parent link=&quot;base_link&quot; /&gt;&lt;!-- joint连接两个实体部件，在URDF树上形成父子关系 --&gt;</div><div class="line">        &lt;child link=&quot;right_leg&quot; /&gt;</div><div class="line">        &lt;origin xyz=&quot;0 -0.22 0.25&quot; /&gt;</div><div class="line">        &lt;!-- 关节向y、z轴分别移动-0.22m、0.25m --&gt;</div><div class="line">    &lt;/joint&gt;</div><div class="line">    &lt;link name=&quot;left_gripper&quot;&gt;</div><div class="line">        &lt;visual&gt;</div><div class="line">            &lt;origin rpy=&quot;0.0 0 0&quot; xyz=&quot;0 0 0&quot; /&gt;</div><div class="line">            &lt;geometry&gt;</div><div class="line">                &lt;mesh filename=&quot;package://urdf_tutorial/meshes/l_finger.dae&quot; /&gt;&lt;!-- 实体部件外形可以导入外部模型文件 --&gt;</div><div class="line">            &lt;/geometry&gt;</div><div class="line">        &lt;/visual&gt;</div><div class="line">    &lt;/link&gt;</div><div class="line">    &lt;joint name=&quot;left_tip_joint&quot; type=&quot;fixed&quot;&gt;</div><div class="line">        &lt;parent link=&quot;left_gripper&quot; /&gt;</div><div class="line">        &lt;child link=&quot;left_tip&quot; /&gt;</div><div class="line">    &lt;/joint&gt;</div><div class="line">&lt;/robot&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>外部导入网格模型</p>
+<ol>
+<li>URDF支持DAE、STL、TIF等外部网格模型</li>
+<li>DAE模型可以定义颜色，因此可以不用在URDF文件中指定颜色或材质</li>
+</ol>
+</li>
+</ol>
+<h2 id="创建可移动的URDF模型"><a href="#创建可移动的URDF模型" class="headerlink" title="创建可移动的URDF模型"></a><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF" target="_blank" rel="external">创建可移动的URDF模型</a></h2><h3 id="代码说明"><a href="#代码说明" class="headerlink" title="代码说明"></a>代码说明</h3><ol>
+<li>在上一节基础上修改URDF文件的joint节点(<a href="https://github.com/ros/urdf_tutorial/tree/master/urdf_tutorial/urdf/06-flexible.urdf" target="_blank" rel="external">source</a>)</li>
+<li><p>运行效果</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">roslaunch urdf_tutorial display.launch model:=urdf/06-flexible.urdf gui:=true</div></pre></td></tr></table></figure>
+<p> <img src="/2017/06/06/URDF学习/flexible.png" alt=""></p>
+</li>
+<li>joint类型说明：<ol>
+<li>continuous:可以从负无穷到正无穷的任意角度变化。相对于fixed，需要axis标签说明旋转轴</li>
+<li>revolute:效果和continuous类似，但是具有严格的旋转范围限制，出axis标签外，还需要limit标签的upper、lower限定最大、最小旋转角度（单位：弧度），effort、velocity限定最大旋转力矩、旋转速度</li>
+<li>prismatic:prismatic是平行移动关节，关节沿axis周平行移动，而不是沿轴旋转。因为prismatic是平行移动，因此可以用于产生伸缩效果。limit标签内容和revolute类似，差别是在prismatic中的<strong>单位是米</strong></li>
+<li>其他joint：planar——可沿平面平行移动（prismatic只能沿一个轴移动）；floating——浮动关节，可以沿着三维空间任意方向移动</li>
+</ol>
+</li>
+<li><p><strong>continuous</strong>示例代码</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;joint name=&quot;head_swivel&quot; type=&quot;continuous&quot;&gt;</div><div class="line">   &lt;parent link=&quot;base_link&quot;/&gt;</div><div class="line">   &lt;child link=&quot;head&quot;/&gt;</div><div class="line">   &lt;axis xyz=&quot;0 0 1&quot;/&gt;</div><div class="line">   &lt;origin xyz=&quot;0 0 0.3&quot;/&gt;</div><div class="line"> &lt;/joint&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>revolute</strong>示例代码</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;joint name=&quot;left_gripper_joint&quot; type=&quot;revolute&quot;&gt;</div><div class="line">   &lt;axis xyz=&quot;0 0 1&quot;/&gt;</div><div class="line">   &lt;limit effort=&quot;1000.0&quot; lower=&quot;0.0&quot; upper=&quot;0.548&quot; velocity=&quot;0.5&quot;/&gt;</div><div class="line">   &lt;origin rpy=&quot;0 0 0&quot; xyz=&quot;0.2 0.01 0&quot;/&gt;</div><div class="line">   &lt;parent link=&quot;gripper_pole&quot;/&gt;</div><div class="line">   &lt;child link=&quot;left_gripper&quot;/&gt;</div><div class="line"> &lt;/joint&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>prismatic</strong>示例代码</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;joint name=&quot;gripper_extension&quot; type=&quot;prismatic&quot;&gt;</div><div class="line">   &lt;parent link=&quot;base_link&quot;/&gt;</div><div class="line">   &lt;child link=&quot;gripper_pole&quot;/&gt;</div><div class="line">   &lt;limit effort=&quot;1000.0&quot; lower=&quot;-0.38&quot; upper=&quot;0&quot; velocity=&quot;0.5&quot;/&gt;</div><div class="line">   &lt;origin rpy=&quot;0 0 0&quot; xyz=&quot;0.19 0 0.2&quot;/&gt;</div><div class="line"> &lt;/joint&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="RVIZ中URDF模型控制原理"><a href="#RVIZ中URDF模型控制原理" class="headerlink" title="RVIZ中URDF模型控制原理"></a>RVIZ中URDF模型控制原理</h3><ol>
+<li>rviz首先解析URDF文件，并查找到所有非fixed的关节及限制参数</li>
+<li>将滑块数据广播到sensor_msgs/JointState中</li>
+<li>然后使用robot_state_publisher来计算所有的坐标变换</li>
+<li>计算结果用于在rviz中进行显示</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器人/" rel="tag"># 机器人</a>
+          
+            <a href="/tags/ROS/" rel="tag"># ROS</a>
+          
+            <a href="/tags/URDF/" rel="tag"># URDF</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/05/MoveIt学习/" rel="next" title="MoveIt学习">
+                <i class="fa fa-chevron-left"></i> MoveIt学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/06/tf2学习/" rel="prev" title="tf2学习">
+                tf2学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <!-- 多说评论框 start -->
+      <div class="ds-thread" data-thread-key="2017/06/06/URDF学习/"
+           data-title="URDF学习" data-url="http://firechecking.github.io/2017/06/06/URDF学习/">
+      </div>
+      <!-- 多说评论框 end -->
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"firechecking"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ZZZ" />
+          <p class="site-author-name" itemprop="name">ZZZ</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.baidu.com/" title="百度" target="_blank">百度</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考教程"><span class="nav-number">3.</span> <span class="nav-text">参考教程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TF2教程"><span class="nav-number">3.1.</span> <span class="nav-text">TF2教程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xacro教程"><span class="nav-number">3.2.</span> <span class="nav-text">Xacro教程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gazebo教程"><span class="nav-number">3.3.</span> <span class="nav-text">Gazebo教程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URDF基础"><span class="nav-number">4.</span> <span class="nav-text">URDF基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用URDF语言创建可视的模型"><span class="nav-number">4.1.</span> <span class="nav-text">使用URDF语言创建可视的模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建可移动的URDF模型"><span class="nav-number">4.2.</span> <span class="nav-text">创建可移动的URDF模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码说明"><span class="nav-number">4.2.1.</span> <span class="nav-text">代码说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RVIZ中URDF模型控制原理"><span class="nav-number">4.2.2.</span> <span class="nav-text">RVIZ中URDF模型控制原理</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZZZ</span>
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+<span id="busuanzi_container_site_uv">本站总访问量<span id="busuanzi_value_site_uv"></span>次</span>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"firechecking"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
