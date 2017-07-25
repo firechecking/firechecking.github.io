@@ -84,13 +84,35 @@
 
 
 
+<meta name="description" content="参考文档
+http://moveit.ros.org/
+http://moveit.ros.org/documentation/concepts/
+http://docs.ros.org/indigo/api/moveit_tutorials/html/
+http://www.ncnynl.com/archives/201610/1028.html
+http://www.roswiki.com/r">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MoveIt学习">
 <meta property="og:url" content="http://firechecking.github.io/2017/06/05/MoveIt学习/index.html">
 <meta property="og:site_name" content="Firechecking">
-<meta property="og:updated_time" content="2017-06-05T08:09:19.000Z">
+<meta property="og:description" content="参考文档
+http://moveit.ros.org/
+http://moveit.ros.org/documentation/concepts/
+http://docs.ros.org/indigo/api/moveit_tutorials/html/
+http://www.ncnynl.com/archives/201610/1028.html
+http://www.roswiki.com/r">
+<meta property="og:image" content="http://moveit.ros.org/wordpress/wp-content/uploads/2013/12/Overview.0012.jpg">
+<meta property="og:image" content="http://moveit.ros.org/wordpress/wp-content/uploads/2013/12/Overview.0031.jpg">
+<meta property="og:image" content="http://moveit.ros.org/wordpress/wp-content/uploads/2013/12/Overview.004.jpg">
+<meta property="og:updated_time" content="2017-07-25T08:04:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MoveIt学习">
+<meta name="twitter:description" content="参考文档
+http://moveit.ros.org/
+http://moveit.ros.org/documentation/concepts/
+http://docs.ros.org/indigo/api/moveit_tutorials/html/
+http://www.ncnynl.com/archives/201610/1028.html
+http://www.roswiki.com/r">
+<meta name="twitter:image" content="http://moveit.ros.org/wordpress/wp-content/uploads/2013/12/Overview.0012.jpg">
 
 
 
@@ -391,7 +413,85 @@
       
 
       
-        
+        <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ol>
+<li><a href="http://moveit.ros.org/" target="_blank" rel="external">http://moveit.ros.org/</a></li>
+<li><a href="http://moveit.ros.org/documentation/concepts/" target="_blank" rel="external">http://moveit.ros.org/documentation/concepts/</a></li>
+<li><a href="http://docs.ros.org/indigo/api/moveit_tutorials/html/" target="_blank" rel="external">http://docs.ros.org/indigo/api/moveit_tutorials/html/</a></li>
+<li><a href="http://www.ncnynl.com/archives/201610/1028.html" target="_blank" rel="external">http://www.ncnynl.com/archives/201610/1028.html</a></li>
+<li><a href="http://www.roswiki.com/read.php?tid=402" target="_blank" rel="external">http://www.roswiki.com/read.php?tid=402</a></li>
+</ol>
+<a id="more"></a>
+<h1 id="MoveIt介绍"><a href="#MoveIt介绍" class="headerlink" title="MoveIt介绍"></a>MoveIt介绍</h1><p>MoveIt！是目前针对移动操作最先进的软件。它结合了运动规划，操纵，三维感知，运动学，控制和导航的最新进展。提供了一个易于使用的平台，开发先进的机器人应用程序，评估新的机器人设计和建筑集成的机器人产品。它广泛应用于工业，商业，研发和其他领域。</p>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p><img src="http://moveit.ros.org/wordpress/wp-content/uploads/2013/12/Overview.0012.jpg" alt=""></p>
+<h2 id="move-group"><a href="#move-group" class="headerlink" title="move_group"></a>move_group</h2><p>move_group是一个ROS node，整合多个独立组件，并提供ROS风格的Action和Service</p>
+<h2 id="User-Interface"><a href="#User-Interface" class="headerlink" title="User Interface"></a>User Interface</h2><ol>
+<li>用户通过user interface与move_group提供的action和service进行交互，user interface提供了C++、Python、GUI三种方式</li>
+<li>move_group的配置参数在ROS param server中，URDF或SRDF模型文件数据也是保存在ROS param server供move_group调用</li>
+</ol>
+<h2 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h2><p>move_group是一个常规的ROS node，通过ROS param server获取以下三类信息：</p>
+<ol>
+<li><p>URDF：获取描述机器人模型的URDF模型文件数据</p>
+</li>
+<li><p>SRDF：获取SRDF(robot_description_semantic)数据，通常由用户使用MoveIt!Setup Assistant工具生成</p>
+</li>
+<li><p>Configuration：move_group冲param server中获取关节描述、运动学、动作规划、传感器等信息。配置文件由MoveIt! Setup Assistant生成，存放在MoveIt! config目录中。</p>
+</li>
+</ol>
+<h2 id="Robot-Interface"><a href="#Robot-Interface" class="headerlink" title="Robot Interface"></a>Robot Interface</h2><p>move_group通过ROS topic和action和机器人进行通信，从而获取位置、关节等状态信息，点云等传感器数据，并且控制机器人运动</p>
+<h3 id="Joint-State-Information"><a href="#Joint-State-Information" class="headerlink" title="Joint State Information"></a>Joint State Information</h3><p>move_group订阅/joint_states主题，来接收关节信息。</p>
+<h3 id="Transform-Information"><a href="#Transform-Information" class="headerlink" title="Transform Information"></a>Transform Information</h3><p>move_group使用ros的tf库监听变换信息，从而使move_group能够获取到机器人的全局位置信息。举例说明：导航模块将机器人的移动时，现对于地图的变换信息发布到tf库，move_group再从tf库获取到这个位置变换信息。</p>
+<p>注：move_group不会发布变换信息到tf，因此想从机器人发布tf变换信息，需要自己运行robot_state_publisher的node</p>
+<h3 id="Controller-Interface"><a href="#Controller-Interface" class="headerlink" title="Controller Interface"></a>Controller Interface</h3><p>move_group使用FollowJointTrajectoryAction来控制机器人运动，FollowJointTrajectoryAction是一个ROS的action接口，需要在机器人上对这个action进行响应，这个action由机器人创建，move_group只是作为客户端和action server进行通信</p>
+<h3 id="Planning-Scene"><a href="#Planning-Scene" class="headerlink" title="Planning Scene"></a>Planning Scene</h3><p>move_group使用规划场景监视器来管理规划场景，场景用于表达世界状态及机器人状态，机器人状态包括机器人本体及所有刚性连接到机器人上的物体。后续有planning scene章节对词进行详细介绍</p>
+<h3 id="Extensible-Capabilities"><a href="#Extensible-Capabilities" class="headerlink" title="Extensible Capabilities"></a>Extensible Capabilities</h3><p>move_group的结构被设计为易于扩展，独立的如抓取、运动学、运动规划等，实际上是扩展自通用基类的单独插件，这些单独的插件可通过一些ros yaml参数和ros pluginlib库进行配置。大多数情况下，move_group插件由MoveIt Setup Assistant自动生成的launch文件完成自动配置，而不需要用户手动配置</p>
+<h1 id="Motion-Planning"><a href="#Motion-Planning" class="headerlink" title="Motion Planning"></a>Motion Planning</h1><h2 id="The-Motion-Planning-Plugin"><a href="#The-Motion-Planning-Plugin" class="headerlink" title="The Motion Planning Plugin"></a>The Motion Planning Plugin</h2><p>MoveIt使用插件进行运动规划，这种方式允许MoveIt使用不同的运动规划器。MoveIt和运动规划器之间通过move_group提供的一个ros action或service进行通信，MoveIt的默认运动规划器由MoveIt Setup Assistant完成配置，使用OMPL和OMPL的MoveIt接口</p>
+<h2 id="The-Motion-Plan-Request"><a href="#The-Motion-Plan-Request" class="headerlink" title="The Motion Plan Request"></a>The Motion Plan Request</h2><p>Motion Plan Request表示需要运动规划器做的事情，例如想让运动规划器移动手臂到不同位置，或末端执行器变成新的姿势，默认情况下碰撞检测是打开的，还可以附加其他物体到末端执行器或机器人其他部位，这样，运动规划器在规划路径时，可以考虑到新增物体的运动。</p>
+<p>另外还可以制定运动规划的约束条件，内置的约束条件是运动学约束：</p>
+<ol>
+<li>位置约束：限制连接位置位于某个空间区域</li>
+<li>方向约束：限制连接方向位于roll、pitch、yaw限制范围</li>
+<li>可视化约束：限制某个点在某个传感器的可视锥形范围</li>
+<li>关节约束：限制关节值处于某个范围</li>
+<li>自定义约束：可以使用用户自定义回调，来指定自己的约束</li>
+</ol>
+<h2 id="The-Motion-Plan-Result"><a href="#The-Motion-Plan-Result" class="headerlink" title="The Motion Plan Result"></a>The Motion Plan Result</h2><p>接收到Motion Plan Request，move_group节点会产生一系列规划路径，来将机器人手臂、关节等移动到目标位置。move_group产生的规划路径不仅包括运行路线，还会根据速度、加速度约束来生成运动轨迹</p>
+<h2 id="The-Motion-Planning-Pipeline"><a href="#The-Motion-Planning-Pipeline" class="headerlink" title="The Motion Planning Pipeline"></a>The Motion Planning Pipeline</h2><p>运动规划器和规划请求适配器</p>
+<p>一个完整的运动规划链，包括一个运动规划器和多个规划请求适配器。规划请求适配器可以接收运动规划预处理请求，以及运动规划后处理响应。前处理可以用在一些场景，如：当机器人初始状态轻微偏离关节限制时。很多操作需要用到后处理，如：将生成的路径装换成带时间参数的路径规划。</p>
+<p>MoveIt提供一些默认的运动规划适配器来完成特定功能。</p>
+<h3 id="FixStartStateBounds"><a href="#FixStartStateBounds" class="headerlink" title="FixStartStateBounds"></a>FixStartStateBounds</h3><p>适配器修复机器人开始状态到符合URDF定义的关节约束内。当设置错误等原因造成机器人初始状态位于关节约束以外时，运动规划器无法完成路径规划，这时“FixStartStateBounds”可以将关节移动到约束以内，以修复初始状态。并不是任何时候都可以使用FixStartStateBounds来进行初始状态修复，因此FixStartStateBounds有参数可以设置可修复的范围。</p>
+<h3 id="FixWorkspaceBounds"><a href="#FixWorkspaceBounds" class="headerlink" title="FixWorkspaceBounds"></a>FixWorkspaceBounds</h3><p>适配器设置一个默认的工作空间进行运动规划：10米x10米x10米的立方体空间。当发送到规划器的规划请求没有工作空间的，这个适配器会生效</p>
+<h3 id="FixStartStateCollision"><a href="#FixStartStateCollision" class="headerlink" title="FixStartStateCollision"></a>FixStartStateCollision</h3><p>适配器小范围调整关节值，来用户设置值附近选取一个无碰撞的参数。用户可以设置“jiggle_factor”来控制调节范围百分比（相对于该关节最大运动范围），还有其他参数设置适配器选取到合适的无碰撞参数前的最大尝试次数</p>
+<h3 id="FixStartStatePathConstraints"><a href="#FixStartStatePathConstraints" class="headerlink" title="FixStartStatePathConstraints"></a>FixStartStatePathConstraints</h3><p>当运动规划的初始状态不满足路径约束时，适配器尝试将机器人移动到满足路径约束的位置，并以新的位置作为初始状态进行路径规划</p>
+<h3 id="AddTimeParameterization"><a href="#AddTimeParameterization" class="headerlink" title="AddTimeParameterization"></a>AddTimeParameterization</h3><p>运动规划器通常产生运动学路径（Kinematic paths），该运动学路径不包含任何速度、加速度约束及时间参数，适配器通过引入速度、加速度约束，来为规划路径产生时间参数</p>
+<h1 id="OMPL"><a href="#OMPL" class="headerlink" title="OMPL"></a>OMPL</h1><p>OMPL是一个开源的运动规划库，主要使用随机运动规划器。MoveIt直接集成了OMPL，并且使用OMPL的运动规划器作为默认规划期。OMPL中的规划器都是基于抽象概率，如OMPL中没有机器人概念。在MoveIt中，配置了OMPL并为OMPL提供后端工具，用于处理机器人问题。</p>
+<h2 id="规划场景"><a href="#规划场景" class="headerlink" title="规划场景"></a>规划场景</h2><p><img src="http://moveit.ros.org/wordpress/wp-content/uploads/2013/12/Overview.0031.jpg" alt=""></p>
+<p>规划场景用于保存和表示机器人本身及所处环境状态，通过move_group中的planning scene monitor实现，规划场景监视器监听以下信息：</p>
+<ol>
+<li>状态信息：在joint_states topic下</li>
+<li>传感器信息：通过下文中的geometry monitor</li>
+<li>世界几何信息：在planning_scene topic中的用户输入</li>
+</ol>
+<h2 id="World-Geometry-Monitor"><a href="#World-Geometry-Monitor" class="headerlink" title="World Geometry Monitor"></a>World Geometry Monitor</h2><p>世界几何信息监视器通过传感器、用户输入来创建世界几何信息，通过occupancy map monitor来创建机器人周围环境的三维表示，使用planning_scene中的附带信息来增加物体信息。</p>
+<h2 id="3D-Perception"><a href="#3D-Perception" class="headerlink" title="3D Perception"></a>3D Perception</h2><p><img src="http://moveit.ros.org/wordpress/wp-content/uploads/2013/12/Overview.004.jpg" alt=""></p>
+<p>可运动地图监视器完成三维感知，使用插件结构处理不同的传感器输入。MoveIt内建的直接支持以下两种输入数据：</p>
+<ol>
+<li>点云：由point cloud occupancy map updater插件处理</li>
+<li>深度图像：depth image occupancy map updater插件处理</li>
+</ol>
+<p>用户可以自由添加其他数据插件到occupancy map monitor</p>
+<h3 id="Octomap"><a href="#Octomap" class="headerlink" title="Octomap"></a>Octomap</h3><p>Occupancy map monitor使用<a href="http://octomap.github.io/" target="_blank" rel="external">Octomap</a>库表示环境的可运动区域地图，Ocotmap数据可以直接在MoveIt的碰撞检测库FCL中使用</p>
+<h3 id="Depth-Image-Occupancy-Map-Updater"><a href="#Depth-Image-Occupancy-Map-Updater" class="headerlink" title="Depth Image Occupancy Map Updater"></a>Depth Image Occupancy Map Updater</h3><p>深度图像可行区域更新插件有自过滤器，会将机器人本体的可见区域从深度图像中去除（使用机器人当前状态信息来完成这个操作）</p>
+<h1 id="Kinematics"><a href="#Kinematics" class="headerlink" title="Kinematics"></a>Kinematics</h1><h2 id="运动学插件"><a href="#运动学插件" class="headerlink" title="运动学插件"></a>运动学插件</h2><p>MoveIt使用插件系统，允许用户编写自己的逆运动学算法。正运动学算法、查找雅克比矩阵已经集成到RobotState类中，默认的逆运动学插件由MoveIt! Setup Assistant完成配置，使用<a href="http://www.orocos.org/kdl" target="_blank" rel="external">KDL</a> numerical jacobian-based solver</p>
+<h2 id="IKFast插件"><a href="#IKFast插件" class="headerlink" title="IKFast插件"></a>IKFast插件</h2><p>用户通常希望使用自己的运动学求解器，如PR2有自己的运动学求解器，最常使用的方法是使用IKFast来生成适用于自己机器人的C++求解器</p>
+<h1 id="碰撞检测"><a href="#碰撞检测" class="headerlink" title="碰撞检测"></a>碰撞检测</h1><p>MoveIt的碰撞检测在Planning Scene中使用CollisionWorld对象完成，碰撞检测在FCL中集成，用户不需要额外操作。</p>
+<p>MoveIt支持一下物体的碰撞检测:</p>
+<ol>
+<li>mesh：网格模型</li>
+<li>基本形状：立方体、圆柱、圆锥、球、平面等</li>
+<li>Octomap：Octomap物体可以直接用于碰撞检测</li>
+</ol>
+<h2 id="运行碰撞矩阵（ACM-Allowed-Collision-Matrix）"><a href="#运行碰撞矩阵（ACM-Allowed-Collision-Matrix）" class="headerlink" title="运行碰撞矩阵（ACM, Allowed Collision Matrix）"></a>运行碰撞矩阵（ACM, Allowed Collision Matrix）</h2><p>碰撞检测通常会消耗掉路径规划的90%计算资源，因此通过设置ACM矩阵定义哪些物体之间不需要进行碰撞检测，可以大大节省计算资源，当对应于两个物体的值在ACM中设置为1，则不会对这两个物体之间进行碰撞检测。</p>
+
       
     </div>
 
@@ -505,8 +605,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -519,7 +628,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">37</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -528,7 +637,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -537,7 +646,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -576,6 +685,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">1.</span> <span class="nav-text">参考文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MoveIt介绍"><span class="nav-number">2.</span> <span class="nav-text">MoveIt介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构"><span class="nav-number">2.1.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#move-group"><span class="nav-number">2.2.</span> <span class="nav-text">move_group</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#User-Interface"><span class="nav-number">2.3.</span> <span class="nav-text">User Interface</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuration"><span class="nav-number">2.4.</span> <span class="nav-text">Configuration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Robot-Interface"><span class="nav-number">2.5.</span> <span class="nav-text">Robot Interface</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Joint-State-Information"><span class="nav-number">2.5.1.</span> <span class="nav-text">Joint State Information</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transform-Information"><span class="nav-number">2.5.2.</span> <span class="nav-text">Transform Information</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller-Interface"><span class="nav-number">2.5.3.</span> <span class="nav-text">Controller Interface</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Planning-Scene"><span class="nav-number">2.5.4.</span> <span class="nav-text">Planning Scene</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Extensible-Capabilities"><span class="nav-number">2.5.5.</span> <span class="nav-text">Extensible Capabilities</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Motion-Planning"><span class="nav-number">3.</span> <span class="nav-text">Motion Planning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Motion-Planning-Plugin"><span class="nav-number">3.1.</span> <span class="nav-text">The Motion Planning Plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Motion-Plan-Request"><span class="nav-number">3.2.</span> <span class="nav-text">The Motion Plan Request</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Motion-Plan-Result"><span class="nav-number">3.3.</span> <span class="nav-text">The Motion Plan Result</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Motion-Planning-Pipeline"><span class="nav-number">3.4.</span> <span class="nav-text">The Motion Planning Pipeline</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FixStartStateBounds"><span class="nav-number">3.4.1.</span> <span class="nav-text">FixStartStateBounds</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FixWorkspaceBounds"><span class="nav-number">3.4.2.</span> <span class="nav-text">FixWorkspaceBounds</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FixStartStateCollision"><span class="nav-number">3.4.3.</span> <span class="nav-text">FixStartStateCollision</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FixStartStatePathConstraints"><span class="nav-number">3.4.4.</span> <span class="nav-text">FixStartStatePathConstraints</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AddTimeParameterization"><span class="nav-number">3.4.5.</span> <span class="nav-text">AddTimeParameterization</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OMPL"><span class="nav-number">4.</span> <span class="nav-text">OMPL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#规划场景"><span class="nav-number">4.1.</span> <span class="nav-text">规划场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#World-Geometry-Monitor"><span class="nav-number">4.2.</span> <span class="nav-text">World Geometry Monitor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3D-Perception"><span class="nav-number">4.3.</span> <span class="nav-text">3D Perception</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Octomap"><span class="nav-number">4.3.1.</span> <span class="nav-text">Octomap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Depth-Image-Occupancy-Map-Updater"><span class="nav-number">4.3.2.</span> <span class="nav-text">Depth Image Occupancy Map Updater</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kinematics"><span class="nav-number">5.</span> <span class="nav-text">Kinematics</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#运动学插件"><span class="nav-number">5.1.</span> <span class="nav-text">运动学插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IKFast插件"><span class="nav-number">5.2.</span> <span class="nav-text">IKFast插件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#碰撞检测"><span class="nav-number">6.</span> <span class="nav-text">碰撞检测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#运行碰撞矩阵（ACM-Allowed-Collision-Matrix）"><span class="nav-number">6.1.</span> <span class="nav-text">运行碰撞矩阵（ACM, Allowed Collision Matrix）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
