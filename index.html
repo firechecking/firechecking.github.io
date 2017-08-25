@@ -258,7 +258,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/07/13/Chrome插件开发/">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/08/21/ROS开发/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="ZZZ">
@@ -283,8 +283,638 @@
             
               
                 
-                <a class="post-title-link" href="/2017/07/13/Chrome插件开发/" itemprop="url">
-                  Chrome插件开发
+                <a class="post-title-link" href="/2017/08/21/ROS开发/" itemprop="url">
+                  ROS开发
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-21T15:46:37+08:00">
+                2017-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器人/" itemprop="url" rel="index">
+                    <span itemprop="name">机器人</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器人/ROS/" itemprop="url" rel="index">
+                    <span itemprop="name">ROS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/21/ROS开发/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/21/ROS开发/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+          
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_page_pv">
+          总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="msg、srv"><a href="#msg、srv" class="headerlink" title="msg、srv"></a>msg、srv</h1><ol>
+<li><p>msg：msg目录下.msg后缀的文本文件</p>
+<ol>
+<li><p>每行包括数据类型、变量名称，支持以下数据类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Header</div><div class="line">int8, int16, int32, int64 (plus uint*)</div><div class="line">float32, float64</div><div class="line">string</div><div class="line">time, duration</div><div class="line">other msg files</div><div class="line">variable-length array[] and fixed-length array[C]</div></pre></td></tr></table></figure>
+</li>
+<li><p>包括Header、string、和其他msg的样例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Header header</div><div class="line"> string child_frame_id</div><div class="line"> geometry_msgs/PoseWithCovariance pose</div><div class="line"> geometry_msgs/TwistWithCovariance twist</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>srv：srv目录下.srv后缀的文本文件</p>
+<ol>
+<li>和msg格式类似</li>
+<li>区别是不仅包括请求，还包括答复格式，以“—”分隔</li>
+<li><p>样例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">int64 A</div><div class="line">int64 B</div><div class="line">---</div><div class="line">int64 Sum</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="msg使用"><a href="#msg使用" class="headerlink" title="msg使用"></a>msg使用</h2><h3 id="创建msg"><a href="#创建msg" class="headerlink" title="创建msg"></a>创建msg</h3><ol>
+<li>在msg目录创建并编辑Num.msg文本文件</li>
+<li>在package.xml中添加依赖</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;build_depend&gt;message_generation&lt;/build_depend&gt;</div><div class="line">&lt;run_depend&gt;message_runtime&lt;/run_depend&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>在CMakeLists.txt中添加支持</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">find_package(catkin REQUIRED COMPONENTS</div><div class="line">   roscpp</div><div class="line">   rospy</div><div class="line">   std_msgs</div><div class="line">   message_generation</div><div class="line">)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">catkin_package(</div><div class="line">  ...</div><div class="line">  CATKIN_DEPENDS message_runtime ...</div><div class="line">  ...)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">add_message_files(</div><div class="line">  FILES</div><div class="line">  Num.msg</div><div class="line">)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">generate_messages(</div><div class="line">  DEPENDENCIES</div><div class="line">  std_msgs</div><div class="line">)</div></pre></td></tr></table></figure>
+<ol>
+<li>工具<ol>
+<li>rosmsg show</li>
+<li>rosmsg list</li>
+</ol>
+</li>
+</ol>
+<h2 id="srv使用"><a href="#srv使用" class="headerlink" title="srv使用"></a>srv使用</h2><ol>
+<li>在srv目录创建并编辑AddTwoInts.srv文本文件</li>
+<li>在package.xml中添加依赖：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;build_depend&gt;message_generation&lt;/build_depend&gt;</div><div class="line">&lt;run_depend&gt;message_runtime&lt;/run_depend&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">find_package(catkin REQUIRED COMPONENTS</div><div class="line">  roscpp</div><div class="line">  rospy</div><div class="line">  std_msgs</div><div class="line">  message_generation</div><div class="line">)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">add_service_files(</div><div class="line">  FILES</div><div class="line">  AddTwoInts.srv</div><div class="line">)</div></pre></td></tr></table></figure>
+<ol>
+<li>工具<ol>
+<li>rossrv show</li>
+<li>rossrv list</li>
+</ol>
+</li>
+</ol>
+<h2 id="编译使用"><a href="#编译使用" class="headerlink" title="编译使用"></a>编译使用</h2><ol>
+<li>在workspace根目录运行<code>catkin_make</code></li>
+<li>ros会根据msg、srv文件创建c++、python、list的代码</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/08/18/sphinx用法/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="ZZZ">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Firechecking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/08/18/sphinx用法/" itemprop="url">
+                  sphinx用法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-18T13:53:07+08:00">
+                2017-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具/文档管理/" itemprop="url" rel="index">
+                    <span itemprop="name">文档管理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/18/sphinx用法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/18/sphinx用法/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+          
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_page_pv">
+          总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Sphinx使用Python编写，最初为Python语言创建文档。可以使用sphinx编写文档、说明、书籍等。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><ol>
+<li>安装python</li>
+<li><p>安装sphinx</p>
+<pre><code>pip install Sphinx
+</code></pre></li>
+</ol>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><ol>
+<li>初始化：运行<code>sphinx-quickstart</code>(另外可以使用<a href="http://www.sphinx-doc.org/en/stable/invocation.html#invocation-apidoc" target="_blank" rel="external">sphinx-apidoc</a>)，按要求选择，也可以全部默认</li>
+<li>修改主题<ol>
+<li>在conf.py文件中修改<code>html_theme = &#39;classic&#39;</code></li>
+</ol>
+</li>
+<li>编译<ol>
+<li>在项目根目录下执行<code>make html</code></li>
+</ol>
+</li>
+<li><a href="http://docs.readthedocs.io/en/latest/getting_started.html#in-markdown" target="_blank" rel="external">加入markdown格式支持</a></li>
+<li>托管到<a href="https://www.baidu.com/link?url=6qIB6tnnO4bbTEy4OgymNIltJgX2HpupdFILhOcZHKv85NSazUWlVShzo-wJL6nP&amp;wd=&amp;eqid=8b048f830002cf830000000659968d47" target="_blank" rel="external">read the docs</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/08/16/Supervisor学习/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="ZZZ">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Firechecking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/08/16/Supervisor学习/" itemprop="url">
+                  Supervisor学习
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-16T11:18:48+08:00">
+                2017-08-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统/" itemprop="url" rel="index">
+                    <span itemprop="name">系统</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统/守护进程/" itemprop="url" rel="index">
+                    <span itemprop="name">守护进程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/16/Supervisor学习/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/16/Supervisor学习/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+          
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_page_pv">
+          总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Supervisor简介"><a href="#Supervisor简介" class="headerlink" title="Supervisor简介"></a>Supervisor简介</h1><ol>
+<li>Supervisor以server/client的方式，守护unix类系统中多个进程</li>
+<li>Supervisor以子进程（subprocess）的形式启动需要守护的进程，因此能准确监控进程的运行状态</li>
+<li>Supervisor可以管理进程组，也可以管理进程之间启动、结束的优先级顺序</li>
+<li>Supervisor通过一个conf文件配置所有信息，及守护进程列表</li>
+<li>Supervisor支持控制台或web界面的控制</li>
+<li>Supervisor支持简单的事件监听，可以使用其他语音编写程序监听Supervisor内部事件，也可以通过XML-RPC接口进行控制。Supervisor还內建了扩展机制支持Python扩展</li>
+<li>Supervisor除Windows外的操作系统，暂不支持Python3</li>
+<li>组成<ol>
+<li>supervisord：响应命令、守护进程、记录日志等，配置文件默认位于<strong>/etc/supervisord.conf</strong></li>
+<li>supervisorctl：supervisor命令行客户端，通过socket或TCP与supervisord连接，能连接到不同的supervisord，能获取status、能控制start、stop、能获取running list，配置位于supervisord相同配置文件的<strong>[supervisorctl]</strong>类下</li>
+<li>Web Server：和supervisorctl功能相似的web服务器，配置位于supervisord相同配置文件的<strong>[inet_http_server]</strong>类下</li>
+<li>XML-RPC Interface：Web Server除了支持http外，还支持XML-RPC接口，见<a href="http://supervisord.org/api.html#xml-rpc" target="_blank" rel="external">XML-RPC API Documentation</a></li>
+</ol>
+</li>
+</ol>
+<h1 id="Supervisor安装"><a href="#Supervisor安装" class="headerlink" title="Supervisor安装"></a><a href="http://supervisord.org/installing.html" target="_blank" rel="external">Supervisor安装</a></h1><ol>
+<li><p>安装</p>
+<pre><code>pip install supervisor
+</code></pre></li>
+<li><p>配置文件</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; echo_supervisord_conf</div><div class="line">&gt;&gt; echo_supervisord_conf &gt; /etc/supervisord.conf</div></pre></td></tr></table></figure>
+<h1 id="Supervisor使用"><a href="#Supervisor使用" class="headerlink" title="Supervisor使用"></a>Supervisor使用</h1><h2 id="运行Supervisor"><a href="#运行Supervisor" class="headerlink" title="运行Supervisor"></a>运行Supervisor</h2><ol>
+<li><p>添加被守护进程</p>
+<ol>
+<li><p>在configrue文件中，添加如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">	[program:foo]</div><div class="line">command=/bin/cat</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>在Terminal中运行：<code>location/supervisord</code></p>
+<ol>
+<li>supervisord默认后台运行，并将日志保存在<code>$CWD/supervisor.log</code></li>
+<li>如果因为调试需要让supervisord前台运行，需要在Terminal中加-n命令</li>
+<li>supervisord支持的控制台参数见<a href="http://supervisord.org/running.html#supervisord-command-line-options" target="_blank" rel="external">官方文档</a></li>
+</ol>
+</li>
+<li><p>在Terminal中运行：<code>location/supervisorctl</code></p>
+<ol>
+<li>supervisorctl以client方式和supervisord通信</li>
+<li>supervisorctl支持的控制台参数见<a href="http://supervisord.org/running.html#supervisorctl-command-line-options" target="_blank" rel="external">官方文档</a></li>
+<li>supervisorctl支持的操作见<a href="http://supervisord.org/running.html#supervisorctl-actions" target="_blank" rel="external">官方文档</a></li>
+</ol>
+</li>
+<li><p>supervisord开机自启</p>
+<ol>
+<li>通过pip、easy install等方式安装的supervisord已经集成了开机自启</li>
+<li><a href="http://serverfault.com/questions/96499/how-to-automatically-start-supervisord-on-linux-ubuntu" target="_blank" rel="external">http://serverfault.com/questions/96499/how-to-automatically-start-supervisord-on-linux-ubuntu</a></li>
+<li><a href="https://github.com/Supervisor/initscripts" target="_blank" rel="external">https://github.com/Supervisor/initscripts</a></li>
+</ol>
+</li>
+</ol>
+<h1 id="Supervisor二次开发"><a href="#Supervisor二次开发" class="headerlink" title="Supervisor二次开发"></a>Supervisor二次开发</h1><h1 id="Supervisor代码解读与技术学习"><a href="#Supervisor代码解读与技术学习" class="headerlink" title="Supervisor代码解读与技术学习"></a>Supervisor代码解读与技术学习</h1>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/07/13/Chrome插件开发_tower日历筛选/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="ZZZ">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Firechecking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/07/13/Chrome插件开发_tower日历筛选/" itemprop="url">
+                  Chrome插件开发_tower日历筛选
                 </a>
               
             
@@ -334,8 +964,19 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/浏览器/Chrome插件/" itemprop="url" rel="index">
-                    <span itemprop="name">Chrome插件</span>
+                  <a href="/categories/浏览器/Chrome/" itemprop="url" rel="index">
+                    <span itemprop="name">Chrome</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/浏览器/Chrome/插件/" itemprop="url" rel="index">
+                    <span itemprop="name">插件</span>
                   </a>
                 </span>
 
@@ -352,8 +993,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/07/13/Chrome插件开发/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/13/Chrome插件开发/" itemprop="commentCount"></span>
+                <a href="/2017/07/13/Chrome插件开发_tower日历筛选/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/13/Chrome插件开发_tower日历筛选/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -385,9 +1026,14 @@
 
       
         
-          
-            <h1 id="Page-Action开发"><a href="#Page-Action开发" class="headerlink" title="Page_Action开发"></a>Page_Action开发</h1><h2 id="manifest-json"><a href="#manifest-json" class="headerlink" title="manifest.json"></a>manifest.json</h2>
-          
+          <h1 id="功能需求"><a href="#功能需求" class="headerlink" title="功能需求"></a>功能需求</h1><p>在Tower.im中，在日历页面展示了团队所有成员的日历，想要查看某个人时，有诸多不表。因此开发一个插件，提取成员名称列表，并根据勾选情况对页面显示内容进行筛选<br></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/07/13/Chrome插件开发_tower日历筛选/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1398,558 +2044,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/06/06/tf2学习/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="ZZZ">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Firechecking">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/06/tf2学习/" itemprop="url">
-                  tf2学习
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-06T20:32:48+08:00">
-                2017-06-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器人/" itemprop="url" rel="index">
-                    <span itemprop="name">机器人</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器人/ROS/" itemprop="url" rel="index">
-                    <span itemprop="name">ROS</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器人/ROS/tf2/" itemprop="url" rel="index">
-                    <span itemprop="name">tf2</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/06/06/tf2学习/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/06/tf2学习/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-          
-          <span class="post-meta-divider">|</span>
-          <span id="busuanzi_container_page_pv">
-          总阅读量<span id="busuanzi_value_page_pv"></span>次
-          </span>
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>TF(transform)工具包用于追踪不同坐标系下随时间变化的帧位置。TF工具包以树结构保存不同时间、不同坐标系下的位置关系，并运行在求取任意两个坐标系在任意时间的坐标变换。<code>ROS Hydro之后，tf工具包已经转为tf2工具包</code></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/06/tf2学习/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/06/06/URDF学习/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="ZZZ">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Firechecking">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/06/URDF学习/" itemprop="url">
-                  URDF学习
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-06T18:13:59+08:00">
-                2017-06-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器人/" itemprop="url" rel="index">
-                    <span itemprop="name">机器人</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器人/ROS/" itemprop="url" rel="index">
-                    <span itemprop="name">ROS</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器人/ROS/URDF/" itemprop="url" rel="index">
-                    <span itemprop="name">URDF</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/06/06/URDF学习/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/06/URDF学习/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-          
-          <span class="post-meta-divider">|</span>
-          <span id="busuanzi_container_page_pv">
-          总阅读量<span id="busuanzi_value_page_pv"></span>次
-          </span>
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>URDF（Unified Robot Description Format）是ROS中使用的一种机器人描述文件，它以HTML的形式定义一个机器人。包含的内容有：连杆、关节名称，运动学参数、动力学参数、可视化模型、碰撞检测模型等。<br></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/06/URDF学习/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://firechecking.github.io/2017/06/05/MoveIt学习/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="ZZZ">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Firechecking">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Firechecking" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/05/MoveIt学习/" itemprop="url">
-                  MoveIt学习
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-05T16:08:30+08:00">
-                2017-06-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器人/" itemprop="url" rel="index">
-                    <span itemprop="name">机器人</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器人/ROS/" itemprop="url" rel="index">
-                    <span itemprop="name">ROS</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器人/ROS/MoveIt/" itemprop="url" rel="index">
-                    <span itemprop="name">MoveIt</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/06/05/MoveIt学习/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/05/MoveIt学习/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-          
-          <span class="post-meta-divider">|</span>
-          <span id="busuanzi_container_page_pv">
-          总阅读量<span id="busuanzi_value_page_pv"></span>次
-          </span>
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ol>
-<li><a href="http://moveit.ros.org/">http://moveit.ros.org/</a></li>
-<li><a href="http://moveit.ros.org/documentation/concepts/">http://moveit.ros.org/documentation/concepts/</a></li>
-<li><a href="http://docs.ros.org/indigo/api/moveit_tutorials/html/">http://docs.ros.org/indigo/api/moveit_tutorials/html/</a></li>
-<li><a href="http://www.ncnynl.com/archives/201610/1028.html">http://www.ncnynl.com/archives/201610/1028.html</a></li>
-<li><a href="http://www.roswiki.com/read.php?tid=402">http://www.roswiki.com/read.php?tid=402</a></li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/05/MoveIt学习/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1997,7 +2091,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2006,7 +2100,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2015,7 +2109,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

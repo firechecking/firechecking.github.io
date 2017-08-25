@@ -96,7 +96,7 @@ http://wiki.ros.org/cn">
 http://www.ros.org/support/
 http://wiki.ros.org/
 http://wiki.ros.org/cn">
-<meta property="og:updated_time" content="2017-06-08T01:27:15.000Z">
+<meta property="og:updated_time" content="2017-08-21T07:18:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ROS使用学习">
 <meta name="twitter:description" content="参考文档
@@ -431,7 +431,7 @@ http://wiki.ros.org/cn">
 </li>
 <li>创建ROS工作空间</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ mkdir -p ~/catkin_ws/src</div><div class="line">$ cd ~/catkin_ws/src</div><div class="line">$ catkin_make</div><div class="line">$ source devel/setup.bash</div><div class="line">$ echo $ROS_PACKAGE_PATH</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ mkdir -p ~/catkin_ws/src</div><div class="line">$ cd ~/catkin_ws/</div><div class="line">$ catkin_make</div><div class="line">$ source devel/setup.bash</div><div class="line">$ echo $ROS_PACKAGE_PATH</div></pre></td></tr></table></figure>
 <h3 id="ROS文件系统教程"><a href="#ROS文件系统教程" class="headerlink" title="ROS文件系统教程"></a>ROS文件系统教程</h3><ol>
 <li>基本概览<ol>
 <li>Package：程序代码的组织单元，Package可以包含库、可执行文件、脚本</li>
@@ -443,7 +443,22 @@ http://wiki.ros.org/cn">
 </ol>
 </li>
 </ol>
-<h3 id="创建ROS-Package"><a href="#创建ROS-Package" class="headerlink" title="创建ROS Package"></a>创建ROS Package</h3><h3 id="编译ROS-Package"><a href="#编译ROS-Package" class="headerlink" title="编译ROS Package"></a>编译ROS Package</h3><h3 id="ROS节点认识"><a href="#ROS节点认识" class="headerlink" title="ROS节点认识"></a>ROS节点认识</h3><ol>
+<h3 id="创建ROS-Package"><a href="#创建ROS-Package" class="headerlink" title="创建ROS Package"></a>创建ROS Package</h3><p>Package必须包含：</p>
+<ol>
+<li>package.xml：提供package的元信息</li>
+<li>CMakeLists.txt两个文件文件。<br>Workspace是一组Package的集合，其组织形式如下：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">workspace_folder/        -- WORKSPACE</div><div class="line">  src/                   -- SOURCE SPACE</div><div class="line">    CMakeLists.txt       -- &apos;Toplevel&apos; CMake file, provided by catkin</div><div class="line">    package_1/</div><div class="line">      CMakeLists.txt     -- CMakeLists.txt file for package_1</div><div class="line">      package.xml        -- Package manifest for package_1</div><div class="line">    ...</div><div class="line">    package_n/</div><div class="line">      CMakeLists.txt     -- CMakeLists.txt file for package_n</div><div class="line">      package.xml        -- Package manifest for package_n</div></pre></td></tr></table></figure>
+<ol>
+<li>创建Package</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd ~/catkin_ws/src</div><div class="line">$ catkin_create_pkg beginner_tutorials std_msgs rospy roscpp</div></pre></td></tr></table></figure>
+<h3 id="编译ROS-Package"><a href="#编译ROS-Package" class="headerlink" title="编译ROS Package"></a>编译ROS Package</h3><ol>
+<li>编译之前首先确保已经运行<code>$ source ~/catkin_ws/devel/setup.bash</code></li>
+<li>编译命令<code>$ catkin_make [make_targets] [-DCMAKE_VARIABLES=...]</code></li>
+<li>在catkin_ws目录，运行catkin_make，catkin_make install，将编译catkin_ws/src目录下找到的所有package</li>
+</ol>
+<h3 id="ROS节点认识"><a href="#ROS节点认识" class="headerlink" title="ROS节点认识"></a>ROS节点认识</h3><ol>
 <li>Nodes：一个节点是一个可执行程序，通过ROS与其他节点通信</li>
 <li>Messages：订阅和发布主题时，用到的ROS数据类型</li>
 <li>Topics：节点发布消息到一个主题，或订阅一个主题的消息</li>
@@ -588,7 +603,7 @@ http://wiki.ros.org/cn">
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -597,7 +612,7 @@ http://wiki.ros.org/cn">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -606,7 +621,7 @@ http://wiki.ros.org/cn">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

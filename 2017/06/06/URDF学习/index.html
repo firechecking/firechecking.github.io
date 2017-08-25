@@ -91,7 +91,8 @@
 <meta property="og:site_name" content="Firechecking">
 <meta property="og:description" content="简介URDF（Unified Robot Description Format）是ROS中使用的一种机器人描述文件，它以HTML的形式定义一个机器人。包含的内容有：连杆、关节名称，运动学参数、动力学参数、可视化模型、碰撞检测模型等。">
 <meta property="og:image" content="http://firechecking.github.io/2017/06/06/URDF学习/flexible.png">
-<meta property="og:updated_time" content="2017-06-08T01:27:35.000Z">
+<meta property="og:image" content="http://firechecking.github.io/2017/06/06/URDF学习/urdf-refer.jpeg">
+<meta property="og:updated_time" content="2017-08-01T12:29:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="URDF学习">
 <meta name="twitter:description" content="简介URDF（Unified Robot Description Format）是ROS中使用的一种机器人描述文件，它以HTML的形式定义一个机器人。包含的内容有：连杆、关节名称，运动学参数、动力学参数、可视化模型、碰撞检测模型等。">
@@ -400,8 +401,14 @@
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
 <li><a href="http://wiki.ros.org/urdf" target="_blank" rel="external">http://wiki.ros.org/urdf</a></li>
 <li><a href="http://wiki.ros.org/urdf/Tutorials" target="_blank" rel="external">http://wiki.ros.org/urdf/Tutorials</a></li>
+<li><a href="http://www.vccoo.com/v/e418b9?source=rss" target="_blank" rel="external">http://www.vccoo.com/v/e418b9?source=rss</a></li>
 </ol>
-<h1 id="参考教程"><a href="#参考教程" class="headerlink" title="参考教程"></a>参考教程</h1><h2 id="TF2教程"><a href="#TF2教程" class="headerlink" title="TF2教程"></a><a href="../tf2学习/">TF2教程</a></h2><h2 id="Xacro教程"><a href="#Xacro教程" class="headerlink" title="Xacro教程"></a>Xacro教程</h2><h2 id="Gazebo教程"><a href="#Gazebo教程" class="headerlink" title="Gazebo教程"></a>Gazebo教程</h2><h1 id="URDF基础"><a href="#URDF基础" class="headerlink" title="URDF基础"></a>URDF基础</h1><h2 id="使用URDF语言创建可视的模型"><a href="#使用URDF语言创建可视的模型" class="headerlink" title="使用URDF语言创建可视的模型"></a><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Visual%20Robot%20Model%20with%20URDF%20from%20Scratch" target="_blank" rel="external">使用URDF语言创建可视的模型</a></h2><ol>
+<h1 id="参考教程"><a href="#参考教程" class="headerlink" title="参考教程"></a>参考教程</h1><ol>
+<li><a href="../tf2学习/">TF2教程</a></li>
+<li>Xacro教程</li>
+<li>Gazebo教程</li>
+</ol>
+<h1 id="URDF基础"><a href="#URDF基础" class="headerlink" title="URDF基础"></a>URDF基础</h1><h2 id="使用URDF语言创建可视的模型"><a href="#使用URDF语言创建可视的模型" class="headerlink" title="使用URDF语言创建可视的模型"></a><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Visual%20Robot%20Model%20with%20URDF%20from%20Scratch" target="_blank" rel="external">使用URDF语言创建可视的模型</a></h2><ol>
 <li>本教程使用URDF创建一个可视的模型，首先确保已经安装了Package:”joint_state_publisher”(使用rosdep安装，或使用apt-get安装urdf_tutorial)</li>
 <li>一个URDF文件中，有一个<code>&lt;robot name=&quot;&quot;&gt;</code>标签</li>
 <li>有多个<code>&lt;link name=&quot;&quot;&gt;</code>标签，表示机器人实体部件</li>
@@ -416,6 +423,9 @@
 <li>启动RVIZ</li>
 </ol>
 </li>
+<li><p>可视化展示URDF树结构</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ urdf_to_graphiz my_robot.urdf</div><div class="line">$ evince test_robot.pdf</div></pre></td></tr></table></figure>
+</li>
 <li><p>示例代码(<a href="https://github.com/ros/urdf_tutorial/blob/master/urdf_tutorial/urdf/05-visual.urdf" target="_blank" rel="external">source</a>)</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</div><div class="line">&lt;robot name=&quot;visual&quot;&gt;</div><div class="line">		&lt;!-- 自定义材料属性 --&gt;</div><div class="line">		&lt;!-- 也可以自定义图片纹理属性 --&gt;</div><div class="line">    &lt;material name=&quot;blue&quot;&gt;</div><div class="line">    &lt;color rgba=&quot;0 0 0.8 1&quot; /&gt;</div><div class="line">    &lt;/material&gt;</div><div class="line">    &lt;link name=&quot;right_leg&quot;&gt;&lt;!-- link表示机器人实体部件 --&gt;</div><div class="line">        &lt;visual&gt;&lt;!-- 实体部件的视觉设置 --&gt;</div><div class="line">            &lt;geometry&gt;</div><div class="line">                &lt;cylinder length=&quot;0.6&quot; radius=&quot;0.2&quot;/&gt;&lt;!-- 长0.6m，班级0.2米的圆柱体 --&gt;</div><div class="line">            &lt;/geometry&gt;</div><div class="line">            &lt;origin rpy=&quot;0 1.57075 0&quot; xyz=&quot;0 0 -0.3&quot; /&gt;&lt;!-- 实体部件的坐标 --&gt;&lt;!--rpy:roll pitch yaw--&gt;</div><div class="line">            &lt;!-- 部件向z轴移动-0.3m,沿y轴旋转PI/2 --&gt;</div><div class="line">            &lt;material name=&quot;white&quot; /&gt;</div><div class="line">        &lt;/visual&gt;</div><div class="line">    &lt;/link&gt;</div><div class="line">    &lt;joint name=&quot;base_to_right_leg&quot; type=&quot;fixed&quot;&gt;&lt;!-- joint表示机器人实体部件的连接(关节) --&gt;</div><div class="line">    &lt;!-- joint类型可以是&quot;fixed&quot;,&quot;continuous&quot;,&quot;revolute&quot;,&quot;prismatic&quot; --&gt;</div><div class="line">        &lt;parent link=&quot;base_link&quot; /&gt;&lt;!-- joint连接两个实体部件，在URDF树上形成父子关系 --&gt;</div><div class="line">        &lt;child link=&quot;right_leg&quot; /&gt;</div><div class="line">        &lt;origin xyz=&quot;0 -0.22 0.25&quot; /&gt;</div><div class="line">        &lt;!-- 关节向y、z轴分别移动-0.22m、0.25m --&gt;</div><div class="line">    &lt;/joint&gt;</div><div class="line">    &lt;link name=&quot;left_gripper&quot;&gt;</div><div class="line">        &lt;visual&gt;</div><div class="line">            &lt;origin rpy=&quot;0.0 0 0&quot; xyz=&quot;0 0 0&quot; /&gt;</div><div class="line">            &lt;geometry&gt;</div><div class="line">                &lt;mesh filename=&quot;package://urdf_tutorial/meshes/l_finger.dae&quot; /&gt;&lt;!-- 实体部件外形可以导入外部模型文件 --&gt;</div><div class="line">            &lt;/geometry&gt;</div><div class="line">        &lt;/visual&gt;</div><div class="line">    &lt;/link&gt;</div><div class="line">    &lt;joint name=&quot;left_tip_joint&quot; type=&quot;fixed&quot;&gt;</div><div class="line">        &lt;parent link=&quot;left_gripper&quot; /&gt;</div><div class="line">        &lt;child link=&quot;left_tip&quot; /&gt;</div><div class="line">    &lt;/joint&gt;</div><div class="line">&lt;/robot&gt;</div></pre></td></tr></table></figure>
 </li>
@@ -425,6 +435,13 @@
 <li>DAE模型可以定义颜色，因此可以不用在URDF文件中指定颜色或材质</li>
 </ol>
 </li>
+</ol>
+<h2 id="使用sw2urdf从Solidworks中导出模型"><a href="#使用sw2urdf从Solidworks中导出模型" class="headerlink" title="使用sw2urdf从Solidworks中导出模型"></a>使用sw2urdf从Solidworks中导出模型</h2><ol>
+<li>下载sw2urdf安装</li>
+<li>参考官方文档，在Solidworks中进行操作并导出（假设为urdf-test）</li>
+<li>sw2urdf导出的是package包，将导出的package包复制到/opt/ros/kinetic/share目录（echo $ROS_PACKAGE_PATH）</li>
+<li>进入导出的urdf目录。roscd urdf-</li>
+<li>执行roslaunch。roslaunch urdf_tutorial display.launch model:=urdf/urdf-testt.urdf</li>
 </ol>
 <h2 id="创建可移动的URDF模型"><a href="#创建可移动的URDF模型" class="headerlink" title="创建可移动的URDF模型"></a><a href="http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF" target="_blank" rel="external">创建可移动的URDF模型</a></h2><h3 id="代码说明"><a href="#代码说明" class="headerlink" title="代码说明"></a>代码说明</h3><ol>
 <li>在上一节基础上修改URDF文件的joint节点(<a href="https://github.com/ros/urdf_tutorial/tree/master/urdf_tutorial/urdf/06-flexible.urdf" target="_blank" rel="external">source</a>)</li>
@@ -455,6 +472,7 @@
 <li>然后使用robot_state_publisher来计算所有的坐标变换</li>
 <li>计算结果用于在rviz中进行显示</li>
 </ol>
+<h3 id="手动创建URDF文件"><a href="#手动创建URDF文件" class="headerlink" title="手动创建URDF文件"></a>手动创建URDF文件</h3><h4 id="URDF文件书写格式"><a href="#URDF文件书写格式" class="headerlink" title="URDF文件书写格式"></a>URDF文件书写格式</h4><p><img src="/2017/06/06/URDF学习/urdf-refer.jpeg" alt=""><br>urdf模型中，包括：连杆link、关节joint、运动学参数axis、动力学参数dynamics、可视化模型visual、碰撞检测模型collision等。</p>
 
       
     </div>
@@ -592,7 +610,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -601,7 +619,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -610,7 +628,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -659,7 +677,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考教程"><span class="nav-number">3.</span> <span class="nav-text">参考教程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TF2教程"><span class="nav-number">3.1.</span> <span class="nav-text">TF2教程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xacro教程"><span class="nav-number">3.2.</span> <span class="nav-text">Xacro教程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gazebo教程"><span class="nav-number">3.3.</span> <span class="nav-text">Gazebo教程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URDF基础"><span class="nav-number">4.</span> <span class="nav-text">URDF基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用URDF语言创建可视的模型"><span class="nav-number">4.1.</span> <span class="nav-text">使用URDF语言创建可视的模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建可移动的URDF模型"><span class="nav-number">4.2.</span> <span class="nav-text">创建可移动的URDF模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码说明"><span class="nav-number">4.2.1.</span> <span class="nav-text">代码说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RVIZ中URDF模型控制原理"><span class="nav-number">4.2.2.</span> <span class="nav-text">RVIZ中URDF模型控制原理</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">2.</span> <span class="nav-text">参考链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考教程"><span class="nav-number">3.</span> <span class="nav-text">参考教程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URDF基础"><span class="nav-number">4.</span> <span class="nav-text">URDF基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用URDF语言创建可视的模型"><span class="nav-number">4.1.</span> <span class="nav-text">使用URDF语言创建可视的模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用sw2urdf从Solidworks中导出模型"><span class="nav-number">4.2.</span> <span class="nav-text">使用sw2urdf从Solidworks中导出模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建可移动的URDF模型"><span class="nav-number">4.3.</span> <span class="nav-text">创建可移动的URDF模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码说明"><span class="nav-number">4.3.1.</span> <span class="nav-text">代码说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RVIZ中URDF模型控制原理"><span class="nav-number">4.3.2.</span> <span class="nav-text">RVIZ中URDF模型控制原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手动创建URDF文件"><span class="nav-number">4.3.3.</span> <span class="nav-text">手动创建URDF文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#URDF文件书写格式"><span class="nav-number">4.3.3.1.</span> <span class="nav-text">URDF文件书写格式</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
